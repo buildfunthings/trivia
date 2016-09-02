@@ -6,10 +6,13 @@ before_script:
   - export LEIN_ROOT=1
   - PATH=$PATH:.
   - lein deps
+  - curl -OL https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2
+  - tar xjf phantomjs-1.9.8-linux-x86_64.tar.bz2 phantomjs-1.9.8-linux-x86_64/bin/phantomjs
+  - mv phantomjs-1.9.8-linux-x86_64/bin/phantomjs /usr/local/bin 
 
 test:
   script:
-    - lein do uberjar, test
+    - lein do uberjar, test, doo phantom test once
   artifacts:
     paths:
       - target/uberjar/*-standalone.jar
