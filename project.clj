@@ -6,10 +6,10 @@
             :url "http://choosealicense.com/licenses/gpl-3.0/#"}
 
   :dependencies [[org.clojure/clojure "1.8.0"]
-                 [org.clojure/clojurescript "1.9.227"]
+                 [org.clojure/clojurescript "1.9.229"]
                  [reagent "0.6.0-rc"]]
 
-  :plugins [[lein-cljsbuild "1.1.3"]]
+  :plugins [[lein-cljsbuild "1.1.4"]]
 
   :min-lein-version "2.6.1"
 
@@ -25,10 +25,10 @@
                                     "test/js"]
 
   :profiles {:uberjar {:aot :all}
-             :dev {:dependencies [[figwheel-sidecar "0.5.4-7"]
+             :dev {:dependencies [[figwheel-sidecar "0.5.7"]
                                   [com.cemerick/piggieback "0.2.1"]
-                                  [binaryage/devtools "0.8.0"]]
-                   :plugins [[lein-figwheel "0.5.4-7"]
+                                  [binaryage/devtools "0.8.1"]]
+                   :plugins [[lein-figwheel "0.5.7"]
                              [lein-doo "0.1.7"]]}}
 
   :cljsbuild {:builds [{:id "dev"
