@@ -2,11 +2,16 @@
 <html lang="en">
   <head>
     <meta charset='utf-8'>
-    <link rel="stylesheet" href="css/style.css"/>    
+    <link rel="stylesheet" href="css/style.css"/>
+    <link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap.min.css"
   </head>
   <body>
     <div id="app"></div>
     <script src="js/compiled/app.js"></script>
-    <script>trivia.core.init();</script>
+    <script>
+     window.onload = function() {	 
+	 trivia.core.init();
+     }
+    </script>
   </body>
 </html>
