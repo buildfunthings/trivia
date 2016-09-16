@@ -58,36 +58,62 @@
          [:a {:class "btn btn-primary btn-lg", :href "#", :role "button" :on-click #(dispatch [:create-game])}
           "Create a new game »"]]]]]]))
 
-(defn create-answer [answer]
-  ^{:key (:answer answer)}
+(defn create-answer [question-id answer]
+  ^{:key (:id answer)}
   [:a {:class "btn btn-lg btn-default btn-block", :href "#", :role "button"
-       :on-click #(js/alert (:correct answer))} (:answer answer)])
+       :on-click #(re-frame/dispatch [:submit-answer question-id (:id answer)])} (:answer answer)])
 
 (defn ask-question []
-  (let [question (re-frame/subscribe [:current-question])]
+  (let [question (re-frame/subscribe [:current-question])
+        answer-state (re-frame/subscribe [:answer-state])
+        state (re-frame/subscribe [:state])]
     (fn []
       [:div {:class "container"}
        [:div {:class "row"}
         [:div {:class "col-md-8 col-md-offset-2"}
-         [:h1 "Just a question"]
+         [:h1 "Question " (:round @state) " of " (:max-rounds @state) ]
          ]]
        [:div {:class "row"}
         [:div {:class "col-md-8 col-md-offset-2"}
          [:div {:class "jumbotron"}
-          [:div {:class "container text-center"}
+          [:div {:class (str "container text-center " (condp = @answer-state
+                                                       :correct "correct-answer"
+                                                       :incorrect "incorrect-answer"
+                                                       :unknown ""))}
            [:h2 (:question @question)]
            ]]
          ]]
        [:div {:class "row"}
         [:div {:class "col-md-8 col-md-offset-2"}
-         (map #(create-answer %) (:answers @question))
+         (doall (map #(create-answer (:id @question) %) (:answers @question)))
+         ]]
+       [:div {:class "row"}
+        [:div {:class "col-md-8 col-md-offset-2"}
+         @state
          ]]])))
+
+(defn end-game []
+  (let [state (re-frame/subscribe [:state])]
+    (fn []
+      [:div {:class "container"}
+       [:div {:class "row"}
+        [:div {:class "jumbotron"}
+         [:div {:class "container"}
+          [:h1 "Game ended (" (:correct @state) " vs " (:incorrect @state) ")"]
+          [:p (if (> (:correct @state) (:incorrect @state))
+                "You win!"
+                "You lose!")]
+          [:p
+           [:a {:class "btn btn-primary btn-lg", :href "#", :role "button" :on-click #(dispatch [:create-game])}
+            "Create a new game »"]]]]]])))
+
 
 (defmulti pages identity)
 
 (defmethod pages :login [] [(login-panel)])
 (defmethod pages :create-game [] [(create-game)])
 (defmethod pages :ask-question [] [(ask-question)])
+(defmethod pages :end-game [] [(end-game)])
 
 (defn show-page
   [page-name]
