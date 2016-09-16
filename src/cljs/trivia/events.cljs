@@ -4,13 +4,19 @@
 
 (re-frame/reg-event-fx
  :create-game
- (fn [db]
-   {:db (assoc db :current-question {:question "How cool is ClojureScript?"
-                                     :answers [{:answer "Meh" :correct false}
-                                               {:answer "It's ok" :correct false}
-                                               {:answer "(awesome \"it is\")" :correct true}
-                                               {:answer "Rubbish" :correct false}]})
+ (fn [cofx [_ data]]
+   {:db (assoc (:db cofx) :current-question {:question "How cool is ClojureScript?"
+                                             :answers [{:id 1 :answer "Meh" :correct false}
+                                                       {:id 2 :answer "It's ok" :correct false}
+                                                       {:id 3 :answer "(awesome \"it is\")" :correct true}
+                                                       {:id 4 :answer "Rubbish" :correct false}]})
     :dispatch [:active-page :ask-question]}))
+
+(re-frame/reg-event-fx
+ :provide-answer
+ [re-frame/debug]
+ (fn [cofx [_ a]]
+   ))
 
 (re-frame/reg-event-db
  :active-page
@@ -19,19 +25,18 @@
 
 (re-frame/reg-event-fx
  :login
- (fn [db [event data]]
-   {:db (assoc db :name data)
+ (fn [cofx [_ data]]
+   {:db (assoc (:db cofx) :name data)
     :dispatch [:login-success]}))
 
 (re-frame/reg-event-fx
  :login-success
- (fn [db]
+ (fn [cofx]
    {:dispatch [:active-page :create-game]}))
 
 (re-frame/reg-event-db
  :name
  (fn [db [event data]]
-   (prn db)
    (assoc db :name data))
  )
 

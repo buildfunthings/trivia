@@ -59,12 +59,13 @@
           "Create a new game »"]]]]]]))
 
 (defn create-answer [answer]
-  ^{:key (:answer answer)}
+  ^{:key (:id answer)}
   [:a {:class "btn btn-lg btn-default btn-block", :href "#", :role "button"
-       :on-click #(js/alert (:correct answer))} (:answer answer)])
+       :on-click #(dispatch [:provide-answer (:id answer)])} (:answer answer)])
 
 (defn ask-question []
-  (let [question (re-frame/subscribe [:current-question])]
+  (let [question (re-frame/subscribe [:current-question])
+        state (re-frame/subscribe [:state])]
     (fn []
       [:div {:class "container"}
        [:div {:class "row"}
@@ -73,7 +74,10 @@
          ]]
        [:div {:class "row"}
         [:div {:class "col-md-8 col-md-offset-2"}
-         [:div {:class "jumbotron"}
+         [:div {:class "jumbotron" :style {:background-color (condp = @state
+                                                               :correct "green"
+                                                               :incorrect "red"
+                                                               "#eee")}}
           [:div {:class "container text-center"}
            [:h2 (:question @question)]
            ]]

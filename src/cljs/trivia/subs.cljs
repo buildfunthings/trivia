@@ -1,11 +1,15 @@
 (ns trivia.subs
   (:require [re-frame.core :as re-frame]))
 
-
 (re-frame/reg-sub
  :current-question
  (fn [db _]
    (:current-question db)))
+
+(re-frame/reg-sub
+ :state
+ (fn [db _]
+   (:state db)))
 
 (re-frame/reg-sub
  :name

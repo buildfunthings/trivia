@@ -3,4 +3,5 @@
 
 (def default-value
   {:name "Arjen"
-   :active-page :login})
+   :active-page :login
+   :state :unknown})
