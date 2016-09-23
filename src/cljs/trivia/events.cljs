@@ -1,7 +1,8 @@
 (ns trivia.events
-  (:require [re-frame.core :as re-frame]
+  (:require [ajax.core :as ajax]
+            [day8.re-frame.http-fx :as http-fx]
+            [re-frame.core :as re-frame]
             [trivia.db :as db]))
-
 
 (defn reset-game [db]
   (-> db
@@ -20,9 +21,8 @@
               (assoc :current-question q))
       :dispatch [:active-page :ask-question]})))
 
-(re-frame/reg-event-fx
- :submit-answer
- (fn [cofx [event question-id answer-id]]
+(comment
+  (fn [cofx [event question-id answer-id]]
    (let [db (:db cofx)
          q (get-in cofx [:db :current-question])
          answer (first (filter #(= (:id %) answer-id) (:answers q)))
@@ -41,16 +41,66 @@
                          {:ms 2000 :dispatch [:next-question]})]}
      )))
 
+(re-frame/reg-event-fx
+ :answer-success
+ (fn [cofx [event result]]
+   (let [db (:db cofx)
+         state (:state db)
+         correct? (:correct? result)]
+     {:db  (-> db
+               (assoc :answer-state (condp = correct?
+                                         true :correct
+                                         false :incorrect
+                                         :unknown))
+               (assoc-in [:state (if correct? :correct :incorrect)]
+                         (inc (get state (if correct? :correct :incorrect)))))
+      :dispatch-later [(if (= (:round state) (:max-rounds state))
+                         {:ms 2000 :dispatch [:active-page :end-game]}
+                         {:ms 2000 :dispatch [:next-question]})]})))
 
 (re-frame/reg-event-db
- :next-question
- (fn [db]
-   (let [q (rand-nth (:questions db))
-         round (get-in db [:state :round])]
+ :answer-failure
+ (fn [db [_ result]]
+   (prn "Request failed: " result)
+   db))
+
+(re-frame/reg-event-fx
+ :submit-answer
+ (fn [cofx [event question-id answer-id]]
+   {:http-xhrio {:method :post
+                 :uri (str "http://localhost:8080/api/question/" question-id)
+                 :params answer-id
+                 :timeout 2000
+                 :format (ajax/json-request-format)
+                 :response-format (ajax/json-response-format {:keywords? true})
+                 :on-success [:answer-success]
+                 :on-failure [:answer-failure]}}))
+
+(re-frame/reg-event-db
+ :question-success
+ (fn [db [_ result]]
+   (let [round (get-in db [:state :round])]
      (-> db
          (assoc-in [:state :round] (inc round))
          (assoc :answer-state :unknown)
-         (assoc :current-question q)))
+         (assoc :current-question result)))))
+
+(re-frame/reg-event-db
+ :question-failure
+ (fn [db [_ result]]
+   (prn "Request failed: " result)
+   db))
+
+(re-frame/reg-event-fx
+ :next-question
+ (fn [cofx]
+   {:http-xhrio {:method :get
+                 :uri "http://localhost:8080/api/question"
+                 :timeout 2000
+                 :response-format (ajax/json-response-format {:keywords? true})
+                 :on-success [:question-success]
+                 :on-failure [:question-failure]}
+    }
    ))
 
 (re-frame/reg-event-db
