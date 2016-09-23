@@ -1,8 +1,11 @@
 (ns trivia.webserver
   (:require [com.stuartsierra.component :as component]
             [compojure.api.sweet :refer :all]
+            [compojure.route :as route]
             [org.httpkit.server :as http]
-            [ring.middleware.cors :as cors]
+            [ring.middleware
+             [cors :as cors]
+             [logger :as logger]]
             [ring.util.http-response :refer :all]
             [schema.core :as s]
             [trivia.db-protocol :as db-protocol]))
@@ -39,14 +42,19 @@
                   ))))
 
 (defn handler [db]
-  (-> (app db)
-      (cors/wrap-cors :access-control-allow-origin [#"http://localhost:3449"]
+  (-> (routes
+       (app db)
+       (route/resources "/")
+       (route/not-found "404 Not Found"))
+;;      (logger/wrap-with-logger :info (fn [x] (prn x)))
+      (cors/wrap-cors :access-control-allow-origin [#"http://127.0.0.1:3449"
+                                                    #"http://127.0.0.1:8080"]
                       :access-control-allow-methods [:get :post] ) ))
 
-(defrecord WebServer [db port server]
+(defrecord WebServer [db host port server]
   component/Lifecycle
   (start [component]
-    (assoc component :server (http/run-server (handler db) {:port port})))
+    (assoc component :server (http/run-server (handler db) {:host host :port port})))
   (stop [component]
     (when-not (nil? server)
       (server :timeout 100))

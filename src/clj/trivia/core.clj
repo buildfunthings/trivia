@@ -4,7 +4,7 @@
             [trivia.system :as system]
             [com.stuartsierra.component :as component]))
 
-(def sys (system/system {:port 8080}) )
+(def sys (system/system {:host "127.0.0.1" :port 8080}) )
 
 (defn init
   "Creates and initializes the system under development in the Var

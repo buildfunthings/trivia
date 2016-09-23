@@ -68,7 +68,7 @@
  :submit-answer
  (fn [cofx [event question-id answer-id]]
    {:http-xhrio {:method :post
-                 :uri (str "http://localhost:8080/api/question/" question-id)
+                 :uri (str "http://127.0.0.1:8080/api/question/" question-id)
                  :params answer-id
                  :timeout 2000
                  :format (ajax/json-request-format)
@@ -95,7 +95,7 @@
  :next-question
  (fn [cofx]
    {:http-xhrio {:method :get
-                 :uri "http://localhost:8080/api/question"
+                 :uri "http://127.0.0.1:8080/api/question"
                  :timeout 2000
                  :response-format (ajax/json-response-format {:keywords? true})
                  :on-success [:question-success]
