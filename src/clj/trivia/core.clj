@@ -42,4 +42,5 @@
 (defn -main
   "Start the application"
   [& args]
-  (println "Hello World"))
+  (prn "Starting system")
+  (component/start (system/system {:host "127.0.0.1" :port 8080})))

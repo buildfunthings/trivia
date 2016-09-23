@@ -41,13 +41,21 @@
                              [lein-doo "0.1.7"]]}}
 
   :cljsbuild {:builds [{:id "dev"
-                        :source-paths ["src/cljs"]
+                        :source-paths ["src/cljs" "env/dev/cljs"]
                         :figwheel {:on-jsload "trivia.core/mount-root"}
                         :compiler {:main trivia.core
                                    :output-to "resources/public/js/compiled/app.js"
                                    :output-dir "resources/public/js/compiled/out"
                                    :asset-path "js/compiled/out"
                                    :source-map-timestamp true}}
+                       {:id           "min"
+                        :source-paths ["src/cljs" "env/prod/cljs"]
+                        :compiler     {:main            trivia.core
+                                       :output-to       "resources/public/js/compiled/app.js"
+                                       :output-dir      "resources/public/js/compiled/out-min"
+                                       :optimizations   :advanced
+                                       :closure-defines {goog.DEBUG false}
+                                       :pretty-print    false}}
                        {:id "test"
                         :source-paths ["src/cljs" "test/cljs"]
                         :compiler {:output-to "resources/public/js/compiled/test.js"

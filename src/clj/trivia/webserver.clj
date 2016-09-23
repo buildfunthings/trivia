@@ -45,17 +45,19 @@
   (-> (routes
        (app db)
        (route/resources "/")
-       (route/not-found "404 Not Found"))
+       (route/not-found "404 Not Found - oeps"))
 ;;      (logger/wrap-with-logger :info (fn [x] (prn x)))
       (cors/wrap-cors :access-control-allow-origin [#"http://127.0.0.1:3449"
                                                     #"http://127.0.0.1:8080"]
-                      :access-control-allow-methods [:get :post] ) ))
+                      :access-control-allow-methods [:get :post :options] ) ))
 
 (defrecord WebServer [db host port server]
   component/Lifecycle
   (start [component]
+    (prn "Starting webserver http://" host ":" port)
     (assoc component :server (http/run-server (handler db) {:host host :port port})))
   (stop [component]
+    (prn "Stopping webserver http://" host ":" port)
     (when-not (nil? server)
       (server :timeout 100))
     (assoc component :server nil)))
