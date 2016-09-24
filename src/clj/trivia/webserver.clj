@@ -47,8 +47,8 @@
        (route/resources "/")
        (route/not-found "404 Not Found - oeps"))
 ;;      (logger/wrap-with-logger :info (fn [x] (prn x)))
-      (cors/wrap-cors :access-control-allow-origin [#"http://127.0.0.1:3449"
-                                                    #"http://127.0.0.1:8080"]
+      (cors/wrap-cors :access-control-allow-origin [#"http://development:3449"
+                                                    #"http://development:8080"]
                       :access-control-allow-methods [:get :post :options] ) ))
 
 (defrecord WebServer [db host port server]

@@ -2,7 +2,13 @@
   (:require [com.stuartsierra.component :as component]
             [trivia.db-protocol :as db-protocol]))
 
-(def db [{:id 1235
+(def db [{:id 1234
+                :question "How cool is ClojureScript?"
+                :answers [{:id 1 :answer "Meh" :correct false}
+                          {:id 2 :answer "It's ok" :correct false}
+                          {:id 3 :answer "(awesome \"it is\")" :correct true}
+                          {:id 4 :answer "Rubbish" :correct false}]}
+         {:id 1235
           :question "What city is in The Netherlands?"
           :answers [{:id 1 :answer "San Francisco" :correct false}
                     {:id 2 :answer "Singapore" :correct false}
