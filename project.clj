@@ -57,7 +57,7 @@
                                        :closure-defines {goog.DEBUG false}
                                        :pretty-print    false}}
                        {:id "test"
-                        :source-paths ["src/cljs" "test/cljs"]
+                        :source-paths ["src/cljs" "test/cljs" "env/prod/cljs"]
                         :compiler {:output-to "resources/public/js/compiled/test.js"
                                    :main trivia.runner
                                    :optimizations :none}}]}
