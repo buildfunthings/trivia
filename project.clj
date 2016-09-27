@@ -27,7 +27,8 @@
   :min-lein-version "2.6.1"
 
   :main ^:skip-aot trivia.core
-
+  :uberjar-name "trivia.jar"
+  
   :target-path "target/%s"
 
   :source-paths ["src/clj" "src/cljs"]
