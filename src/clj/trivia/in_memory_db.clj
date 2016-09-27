@@ -69,7 +69,6 @@
                     {:id 3 :answer "100 Billion" :correct true}
                     {:id 4 :answer "5 Trillion" :correct false}]}])
 
-
 (defrecord InMemoryDb []
   db-protocol/DbActions
   (get-random-question [this]

@@ -7,6 +7,7 @@
 
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.9.229"]
+                 [environ "1.1.0"]
                  [reagent "0.6.0-rc"]
                  [re-frame "0.8.0"]
                  [org.clojure/tools.namespace "0.2.11"]
@@ -16,9 +17,12 @@
                  [prismatic/schema "1.1.3"]
                  [day8.re-frame/http-fx "0.0.4"]
                  [ring-cors "0.1.8"]
-                 [ring.middleware.logger "0.5.0"]]
+                 [ring.middleware.logger "0.5.0"]
+                 
+                 ]
 
-  :plugins [[lein-cljsbuild "1.1.4"]]
+  :plugins [[lein-cljsbuild "1.1.4"]
+            [lein-environ "1.1.0"]]
 
   :min-lein-version "2.6.1"
 
@@ -33,12 +37,16 @@
                                     "target"
                                     "test/js"]
 
-  :profiles {:uberjar {:aot :all}
-             :dev {:dependencies [[figwheel-sidecar "0.5.7"]
+  :profiles {:uberjar {:aot :all
+                       :omit-source true
+                       :prep-tasks ["compile" ["cljsbuild" "once" "min"]]
+                       }
+             :dev [:dev-overrides
+                   {:dependencies [[figwheel-sidecar "0.5.7"]
                                   [com.cemerick/piggieback "0.2.1"]
                                   [binaryage/devtools "0.8.1"]]
                    :plugins [[lein-figwheel "0.5.7"]
-                             [lein-doo "0.1.7"]]}}
+                             [lein-doo "0.1.7"]]}]}
 
   :cljsbuild {:builds [{:id "dev"
                         :source-paths ["src/cljs" "env/dev/cljs"]

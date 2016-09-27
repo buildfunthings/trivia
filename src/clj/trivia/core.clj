@@ -1,10 +1,11 @@
 (ns trivia.core
   (:gen-class)
   (:require [clojure.tools.namespace.repl :refer [refresh]]
-            [trivia.system :as system]
-            [com.stuartsierra.component :as component]))
+            [com.stuartsierra.component :as component]
+            [environ.core :refer [env]]
+            [trivia.system :as system]))
 
-(def sys (system/system {:host "development" :port 8080}) )
+(def sys (system/system {:host (env :host) :port (Integer/parseInt (env :port "80"))}) )
 
 (defn init
   "Creates and initializes the system under development in the Var
@@ -43,4 +44,4 @@
   "Start the application"
   [& args]
   (prn "Starting system")
-  (component/start (system/system {:host "development" :port 8080})))
+  (component/start (system/system {:host (env :host) :port (Integer/parseInt (env :port "80"))})))

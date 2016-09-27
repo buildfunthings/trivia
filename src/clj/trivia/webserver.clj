@@ -8,7 +8,9 @@
              [logger :as logger]]
             [ring.util.http-response :refer :all]
             [schema.core :as s]
-            [trivia.db-protocol :as db-protocol]))
+            [trivia.db-protocol :as db-protocol]
+            [environ.core :refer [env]]
+            [clojure.string :as str]))
 
 (s/defschema Answer {:id s/Int :answer s/Str :correct s/Bool})
 
@@ -41,23 +43,27 @@
                   (ok {:correct? (db-protocol/correct-answer? db id answer-id)})
                   ))))
 
+(defn build-cors-list [input]
+  (if (empty? input)
+    []
+    (into [] (map re-pattern (str/split input #",")))))
+
 (defn handler [db]
   (-> (routes
        (app db)
        (route/resources "/")
        (route/not-found "404 Not Found - oeps"))
 ;;      (logger/wrap-with-logger :info (fn [x] (prn x)))
-      (cors/wrap-cors :access-control-allow-origin [#"http://development:3449"
-                                                    #"http://development:8080"]
+      (cors/wrap-cors :access-control-allow-origin (build-cors-list (env :cors))
                       :access-control-allow-methods [:get :post :options] ) ))
 
 (defrecord WebServer [db host port server]
   component/Lifecycle
   (start [component]
-    (prn "Starting webserver http://" host ":" port)
+    (prn (str "Starting webserver http://" host ":" port))
     (assoc component :server (http/run-server (handler db) {:host host :port port})))
   (stop [component]
-    (prn "Stopping webserver http://" host ":" port)
+    (prn (str "Stopping webserver http://" host ":" port))
     (when-not (nil? server)
       (server :timeout 100))
     (assoc component :server nil)))
