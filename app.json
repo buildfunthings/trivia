@@ -1,0 +1,5 @@
+{
+    "name": "Build Fun Things: Trivia Game",
+    "description": "The Trivia game written during the Build Fun Things live sessions",
+    "image": "heroku/clojure"
+}
