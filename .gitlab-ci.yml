@@ -22,7 +22,7 @@ staging:
   type: deploy
   script:
     - apt-get update -qy
-    - apt-get install -y ruby-dev
+    - apt-get install -y rubygems ruby-dev
     - gem install dpl    
     - dpl --provider=heroku --app=buildfunthings --api-key=$HEROKU_STAGING_API_KEY
   only:
