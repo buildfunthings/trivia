@@ -1,1 +1,1 @@
-web: java $JVM_OPTS -jar target/trivia.jar
+web: java $JVM_OPTS -jar target/uberjar/trivia.jar
