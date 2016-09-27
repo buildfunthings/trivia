@@ -1,5 +1,10 @@
 image: java:8
 
+#    - curl -OL https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2
+#    - tar xjf phantomjs-2.1.1-linux-x86_64.tar.bz2 phantomjs-2.1.1-linux-x86_64/bin/phantomjs
+#    - mv phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin
+# , doo phantom test once
+
 test:
   script:
     - apt-get update -y
@@ -8,10 +13,7 @@ test:
     - export LEIN_ROOT=1
     - PATH=$PATH:.
     - lein deps
-    - curl -OL https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2
-    - tar xjf phantomjs-2.1.1-linux-x86_64.tar.bz2 phantomjs-2.1.1-linux-x86_64/bin/phantomjs
-    - mv phantomjs-2.1.1-linux-x86_64/bin/phantomjs /usr/local/bin 
-    - lein do uberjar, test, doo phantom test once
+    - lein test
   artifacts:
     paths:
       - target/uberjar/*-standalone.jar
