@@ -17,9 +17,7 @@
                  [prismatic/schema "1.1.3"]
                  [day8.re-frame/http-fx "0.0.4"]
                  [ring-cors "0.1.8"]
-                 [ring.middleware.logger "0.5.0"]
-                 
-                 ]
+                 [ring.middleware.logger "0.5.0"]]
 
   :plugins [[lein-cljsbuild "1.1.4"]
             [lein-environ "1.1.0"]]
