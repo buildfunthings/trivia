@@ -10,6 +10,7 @@
     (log/info "Starting migrations")
     (let [config {:store                :database
                   :migration-dir        "migrations/"
+                  :migration-table-name "schema_migrations"
                   :db (:spec pool)}]
       (log/info "Running migrations with spec: " config)
       (migratus/migrate config))
@@ -25,7 +26,7 @@
 (comment
   ;; :db (:spec (component/start (trivia.connectionpool/new-connectionpool {})))
   (migratus/create  {:store                :database
-                     :migration-dir        "migrations/"} "question")
+                     :migration-dir        "migrations/"} "questiona")
 
   (migratus/create  {:store                :database
                      :migration-dir        "migrations/"} "answer")
