@@ -7,12 +7,15 @@
 (defrecord Migrations [pool]
   component/Lifecycle
   (start [component]
+    (log/info "Starting migrations")
     (let [config {:store                :database
                   :migration-dir        "migrations/"
                   :db (:spec pool)}]
+      (log/info "Running migrations with spec: " config)
       (migratus/migrate config))
     component)
   (stop [component]
+    (log/info "Stopping migrations")
     component)
   )
 

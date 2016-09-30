@@ -7,10 +7,10 @@
 
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.9.229"]
-                 [environ "1.1.0"]
-                 [reagent "0.6.0-rc"]
-                 [re-frame "0.8.0"]
                  [org.clojure/tools.namespace "0.2.11"]
+                 [environ "1.1.0"]
+                 [reagent "0.6.0"]
+                 [re-frame "0.8.0"]
                  [http-kit "2.1.18"]
                  [com.stuartsierra/component "0.3.1"]
                  [metosin/compojure-api "1.1.8"]

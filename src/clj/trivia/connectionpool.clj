@@ -7,11 +7,10 @@
             [taoensso.timbre :as log])
   (:import com.mchange.v2.c3p0.ComboPooledDataSource))
 
-(defrecord
-    ConnectionPool
-    [spec]
+(defrecord ConnectionPool [spec]
   component/Lifecycle
   (start [component]
+    (log/info "Creating new database pool for env " (env :database-url))
     (let [uri (java.net.URI. (env :database-url))
           [username password] (str/split (.getUserInfo uri) #":")]
       (assoc component :spec  (pool/make-datasource-spec
@@ -24,7 +23,11 @@
                                            (format "//%s:%s%s" (.getHost uri) (.getPort uri)
                                                    (.getPath uri)))}))))
   (stop [component]
+    (log/info "Current spec: " spec)
+    (when-not (nil? spec)
+      (.close spec))
     (dissoc component :spec)))
 
 (defn new-connectionpool [config-options]
+  (log/info "Creating new connection pool")
   (map->ConnectionPool config-options))

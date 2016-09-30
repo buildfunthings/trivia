@@ -3,15 +3,16 @@
   (:require [clojure.tools.namespace.repl :refer [refresh]]
             [com.stuartsierra.component :as component]
             [environ.core :refer [env]]
-            [trivia.system :as system]))
+            [trivia.system :as system]
+            [taoensso.timbre :as log]))
 
-(def sys (system/system {:host (env :host) :port (Integer/parseInt (env :port "80"))}) )
+(def sys nil)
 
 (defn init
   "Creates and initializes the system under development in the Var
   #'system."
   []
-  ;; TODO
+  (def sys (system/system {:host (env :host) :port (Integer/parseInt (env :port "80"))}))
   )
 
 (defn start
@@ -43,5 +44,5 @@
 (defn -main
   "Start the application"
   [& args]
-  (prn "Starting system")
+  (log/info "Starting system")
   (component/start (system/system {:host (env :host) :port (Integer/parseInt (env :port "80"))})))

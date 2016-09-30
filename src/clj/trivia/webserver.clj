@@ -1,16 +1,17 @@
 (ns trivia.webserver
-  (:require [com.stuartsierra.component :as component]
+  (:require [clojure.string :as str]
+            [com.stuartsierra.component :as component]
             [compojure.api.sweet :refer :all]
             [compojure.route :as route]
+            [environ.core :refer [env]]
             [org.httpkit.server :as http]
             [ring.middleware
              [cors :as cors]
              [logger :as logger]]
             [ring.util.http-response :refer :all]
             [schema.core :as s]
-            [trivia.db-protocol :as db-protocol]
-            [environ.core :refer [env]]
-            [clojure.string :as str]))
+            [taoensso.timbre :as log]
+            [trivia.db-protocol :as db-protocol]))
 
 (s/defschema Answer {:id s/Int :answer s/Str :correct s/Bool})
 
@@ -60,10 +61,10 @@
 (defrecord WebServer [db host port server]
   component/Lifecycle
   (start [component]
-    (prn (str "Starting webserver http://" host ":" port))
+    (log/info "Starting webserver http://" host ":" port)
     (assoc component :server (http/run-server (handler db) {:host host :port port})))
   (stop [component]
-    (prn (str "Stopping webserver http://" host ":" port))
+    (log/info "Stopping webserver http://" host ":" port)
     (when-not (nil? server)
       (server :timeout 100))
     (assoc component :server nil)))

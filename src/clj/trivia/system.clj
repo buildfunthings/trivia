@@ -4,9 +4,11 @@
              [connectionpool :as pool]
              [in-memory-db :as in-memory-db]
              [migrations :as migrations]
-             [webserver :as webserver]]))
+             [webserver :as webserver]]
+            [taoensso.timbre :as log]))
 
 (defn system [config-options]
+  (log/info "Creating system")
   (let [{:keys [port]} config-options]
     (component/system-map
      :pool (pool/new-connectionpool config-options)

@@ -87,6 +87,7 @@
     (log/info "Starting in memory database with connection pool " pool)
     component)
   (stop [component]
+    (log/info "Stopping in memory database")
     component))
 
 (defn new-inmemorydb [config-options]
