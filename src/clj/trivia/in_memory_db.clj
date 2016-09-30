@@ -1,13 +1,14 @@
 (ns trivia.in-memory-db
   (:require [com.stuartsierra.component :as component]
+            [taoensso.timbre :as log]
             [trivia.db-protocol :as db-protocol]))
 
 (def db [{:id 1234
-                :question "How cool is ClojureScript?"
-                :answers [{:id 1 :answer "Meh" :correct false}
-                          {:id 2 :answer "It's ok" :correct false}
-                          {:id 3 :answer "(awesome \"it is\")" :correct true}
-                          {:id 4 :answer "Rubbish" :correct false}]}
+          :question "How cool is ClojureScript?"
+          :answers [{:id 1 :answer "Meh" :correct false}
+                    {:id 2 :answer "It's ok" :correct false}
+                    {:id 3 :answer "(awesome \"it is\")" :correct true}
+                    {:id 4 :answer "Rubbish" :correct false}]}
          {:id 1235
           :question "What city is in The Netherlands?"
           :answers [{:id 1 :answer "San Francisco" :correct false}
@@ -69,7 +70,7 @@
                     {:id 3 :answer "100 Billion" :correct true}
                     {:id 4 :answer "5 Trillion" :correct false}]}])
 
-(defrecord InMemoryDb []
+(defrecord InMemoryDb [pool]
   db-protocol/DbActions
   (get-random-question [this]
     (rand-nth db))
@@ -83,6 +84,7 @@
   
   component/Lifecycle
   (start [component]
+    (log/info "Starting in memory database with connection pool " pool)
     component)
   (stop [component]
     component))

@@ -5,3 +5,5 @@
 ;; webserver
 ;;
 (def api (str (.-protocol js/location) "//" (.-hostname js/location) ":" (.-port js/location) "/api"))
+
+(def ws-api "development:8080")
