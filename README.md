@@ -5,6 +5,5 @@ A course into creating a trivia game using Clojure and ClojureScript.
 
 Videos relating to this series:
 
- - [Live Coding 001](https://www.youtube.com/watch?v=9sVGy0IovH8)
- - [Live Coding 002](https://www.youtube.com/watch?v=3VcNATKGBAQ)
- - [Live Coding 003](https://www.youtube.com/watch?v=vQumvPcGYF0)
+ - [Live Coding Playlist](https://www.youtube.com/playlist?list=PLdKXxqwRv6_zqCIzDDS7DG0R839kwN3Db)
+ - [Live Coding Summaries](https://www.youtube.com/playlist?list=PLdKXxqwRv6_yfIdFpTj9-LHlnIjZ087WC)
