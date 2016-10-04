@@ -1,0 +1,104 @@
+[
+ {:set 1
+  :questions [
+              {:question "The Moon of Barods, a diamond that Marilyn Monroe wore when singing \"Diamonds Are A Girl's Best Friend\" in the film Gentlemen prefer Blondes, was auctioned off at Christies for how much in 1990?"
+               :answers [{:text "$97,000" :correct? false}
+                         {:text "$297,000" :correct? true}
+                         {:text "$497,000" :correct? false}
+                         {:text "$797,000" :correct? false}]}
+              {:question "Which one of these Academy Awards did Gone With the Wind not win?"
+               :answers [{:text "best actor" :correct? true}
+                         {:text "best actress" :correct? false}
+                         {:text "best picture" :correct? false}
+                         {:text "best supporting actor" :correct? false}]}
+
+              {:question "Which one of these talented actors did not star in the 1989 movie \"Family Business\"?"
+               :answers [{:text "Sean Connery" :correct? false}
+                         {:text "Matthew Broderick" :correct? false}
+                         {:text "Dustin Hoffman" :correct? false}
+                         {:text "Tom Cruise" :correct? true}]}
+              {:question "In the 1933 movie where May West spoke the line \"Come up and see me sometime\" , called She Done Him Wrong, who was her co-star?"
+               :answers [{:text "W.C. Fields" :correct? false}
+                         {:text "Cary Grant" :correct? true}
+                         {:text "James Stewart" :correct? false}
+                         {:text "John Wayne}" :correct? false}]}
+
+              {:question "Clint Eastwood gave us the immortal line, \"Go ahead... make my day\", in what film?"
+               :answers [{:text "Dirty Harry" :correct? true}
+                         {:text "Magnum Force" :correct? false}
+                         {:text "Sudden Impact" :correct? false}
+                         {:text "Tightrope" :correct? false}]}
+              {:question "In the 1951 science fiction movie, The Day The Earth Stood Still, what was the name of the robot?"
+               :answers [{:text "Gort" :correct? true}
+                         {:text "Klaatu" :correct? false}
+                         {:text "Robby" :correct? false}]}
+              ]}
+ {:set 2
+  :questions [{
+               :question "How cool is ClojureScript?"
+               :answers [{:text "Meh" :correct? false}
+                         {:text "It's ok" :correct? false}
+                         {:text "(awesome \"it is\")" :correct? true}
+                         {:text "Rubbish" :correct? false}]}
+              {
+               :question "What city is in The Netherlands?"
+               :answers [{:text "San Francisco" :correct? false}
+                         {:text "Singapore" :correct? false}
+                         {:text "Barcelona" :correct? false}
+                         {:text "Amsterdam" :correct? true}]}
+              {
+               :question "What language do they speak in The Netherlands?"
+               :answers [{:text "English" :correct? false}
+                         {:text "Dutch" :correct? true}
+                         {:text "Frysian" :correct? true}
+                         {:text "Danish" :correct? false}]}
+              {
+               :question "Which of these former U.S. Presidents appeared on the television series Laugh-In?"
+               :answers [{:text "Lyndon Johnson" :correct? false}
+                         {:text "Jimmy Carter" :correct? false}
+                         {:text "Richard Nixon" :correct? true}
+                         {:text "Gerald Ford" :correct? false}]}
+              {
+               :question "The Earth is approximately how many miles away from the Sun?"
+               :answers [{:text "9.3 million" :correct? false}
+                         {:text "93 million" :correct? true}
+                         {:text "39 million" :correct? true}
+                         {:text "193 million" :correct? false}]}
+              {
+               :question "Which insect shorted out an early supercomputer and inspired the term 'computer bug'?"
+               :answers [{:text "Moth" :correct? true}
+                         {:text "Fly" :correct? false}
+                         {:text "Roach" :correct? false}
+                         {:text "Japanese beetle" :correct? false}]}
+              {
+               :question "Which of the following men does not have a chemical element named after him?"
+               :answers [{:text "Albert Einstein" :correct? false}
+                         {:text "Isaac Newton" :correct? true}
+                         {:text "Niels Bohr" :correct? false}
+                         {:text "Enrico Fermi" :correct? false}]}
+              {
+               :question "Which of the following landlocked countries is entirely contained within another country?"
+               :answers [{:text "Lesotho" :correct? true}
+                         {:text "Mongolia" :correct? false}
+                         {:text "Burkina Faso" :correct? false}
+                         {:text "Luxembourg" :correct? false}]}
+              {
+               :question "In the children's book series, where is Paddington Bear originally from?"
+               :answers [{:text "India" :correct? false}
+                         {:text "Canada" :correct? false}
+                         {:text "Peru" :correct? true}
+                         {:text "Iceland" :correct? false}]}
+              {
+               :question "Who is credited with inventing the first mass-produced helicopter?"
+               :answers [{:text "Igor Sikorsky" :correct? true}
+                         {:text "Ferdinand von Zeppelin" :correct? false}
+                         {:text "Elmer Sperry" :correct? false}
+                         {:text "Gottlieb Daimler" :correct? false}]}
+              {
+               :question "According to the Population Reference Bureau, what is the approximate number of people who have ever lived on Earth?"
+               :answers [{:text "50 Billion" :correct? false}
+                         {:text "1 Trillion" :correct? false}
+                         {:text "100 Billion" :correct? true}
+                         {:text "5 Trillion" :correct? false}]}
+              ]}
+ ]
