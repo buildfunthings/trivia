@@ -13,7 +13,7 @@
             [taoensso.timbre :as log]
             [trivia.db-protocol :as db-protocol]))
 
-(s/defschema Answer {:id s/Int :answer s/Str :correct s/Bool})
+(s/defschema Answer {:id s/Int :answer s/Str})
 
 (s/defschema Question {:id s/Int
                        :question s/Str
@@ -41,7 +41,8 @@
                   :path-params [id :- s/Int]
                   :body [answer-id s/Int]
                   :summary "Return true or false for the answer"
-                  (ok {:correct? (db-protocol/correct-answer? db id answer-id)})
+                  (let [a (db-protocol/correct-answer? db id answer-id)]
+                    (ok {:correct? a}))
                   ))))
 
 (defn build-cors-list [input]

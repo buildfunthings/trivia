@@ -21,7 +21,7 @@
                :answers [{:text "W.C. Fields" :correct? false}
                          {:text "Cary Grant" :correct? true}
                          {:text "James Stewart" :correct? false}
-                         {:text "John Wayne}" :correct? false}]}
+                         {:text "John Wayne" :correct? false}]}
 
               {:question "Clint Eastwood gave us the immortal line, \"Go ahead... make my day\", in what film?"
                :answers [{:text "Dirty Harry" :correct? true}
@@ -62,7 +62,7 @@
                :question "The Earth is approximately how many miles away from the Sun?"
                :answers [{:text "9.3 million" :correct? false}
                          {:text "93 million" :correct? true}
-                         {:text "39 million" :correct? true}
+                         {:text "39 million" :correct? false}
                          {:text "193 million" :correct? false}]}
               {
                :question "Which insect shorted out an early supercomputer and inspired the term 'computer bug'?"

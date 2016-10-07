@@ -90,7 +90,7 @@
                      :migration-dir        "migrations/"} "puzzle_migrations")
 
   (migratus/create  {:store                :database
-                     :migration-dir        "migrations/"} "questions")
+                     :migration-dir        "migrations/"} "fix-data")
   
   (migratus/rollback {:store                :database
                       :migration-dir        "migrations/"

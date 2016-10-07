@@ -1,11 +1,12 @@
 (ns trivia.system
   (:require [com.stuartsierra.component :as component]
+            [taoensso.timbre :as log]
             [trivia
              [connectionpool :as pool]
              [in-memory-db :as in-memory-db]
              [migrations :as migrations]
-             [webserver :as webserver]]
-            [taoensso.timbre :as log]))
+             [postgresql-db :as postgresql-db]
+             [webserver :as webserver]]))
 
 (defn system [config-options]
   (log/info "Creating system")
@@ -16,7 +17,7 @@
                   (migrations/new-migrations config-options)
                   [:pool])
      :db (component/using
-          (in-memory-db/new-inmemorydb config-options)
+          (postgresql-db/new-postresql-db config-options)
           [:pool :migrations])
      :http (component/using
             (webserver/new-webserver config-options)
