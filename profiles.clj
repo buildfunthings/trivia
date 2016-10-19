@@ -3,7 +3,7 @@
                         :cors "http://development:3449,http://development:8080"
                         :host "development"
                         :port "8080"
-                        :timbre_level "info"
+                        :timbre-level "info"
                         }}}
 
 

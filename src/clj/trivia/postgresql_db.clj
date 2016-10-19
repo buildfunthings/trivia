@@ -17,8 +17,7 @@
 (defrecord PostgreSQL-DB [pool]
   db-protocol/DbActions
   (get-random-question [this]
-    (create-question (get-question-data (:spec pool) (get-random-question-id (:spec pool))))
-    )
+    (create-question (get-question-data (:spec pool) (get-random-question-id (:spec pool)))))
   
   (correct-answer? [this question-id answer-id]
     (let [correct (:correct (is-answer-correct? (:spec pool)

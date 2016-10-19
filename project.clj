@@ -25,7 +25,9 @@
                  [com.taoensso/timbre "4.7.4"]
                  [com.fzakaria/slf4j-timbre "0.3.2"]
                  [org.postgresql/postgresql "9.4.1211"]
-                 [com.layerware/hugsql "0.4.7"]]
+                 [com.layerware/hugsql "0.4.7"]
+                 [org.clojure/test.check "0.9.0"]
+                 [ring/ring-mock "0.3.0"]]
 
   :plugins [[lein-cljsbuild "1.1.4"]
             [lein-environ "1.1.0"]]

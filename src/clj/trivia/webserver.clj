@@ -21,6 +21,9 @@
 
 (s/defschema QuestionAnswer {:correct? s/Bool})
 
+(defn get-random-question [db]
+  (db-protocol/get-random-question db))
+
 (defn app [db]
   (api
    {:swagger {:ui "/api-docs"
@@ -34,7 +37,7 @@
             (GET "/question" []
                  :return Question
                  :summary "Return a random question"
-                 (ok (db-protocol/get-random-question db)))
+                 (ok (get-random-question db)))
 
             (POST "/question/:id" []
                   :return QuestionAnswer
