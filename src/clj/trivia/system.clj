@@ -6,6 +6,7 @@
              [in-memory-db :as in-memory-db]
              [migrations :as migrations]
              [postgresql-db :as postgresql-db]
+             [rest-api-handler :as rest-api]
              [webserver :as webserver]]))
 
 (defn system [config-options]
@@ -19,6 +20,9 @@
      :db (component/using
           (postgresql-db/new-postresql-db config-options)
           [:pool :migrations])
+     :api (component/using
+           (rest-api/new-restapihandler config-options)
+           [:db])
      :http (component/using
             (webserver/new-webserver config-options)
-            [:db]))))
+            [:api]))))

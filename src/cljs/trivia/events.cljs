@@ -7,7 +7,7 @@
 
 (defn reset-game [db]
   (-> db
-      (assoc-in [:state :round] 1)
+      (assoc-in [:state :round] 0)
       (assoc-in [:state :correct] 0)
       (assoc-in [:state :incorrect] 0)
       (assoc :answer-state :unknown)))
@@ -20,7 +20,7 @@
      {:db (-> db
               (reset-game)
               (assoc :current-question q))
-      :dispatch [:active-page :ask-question]})))
+      :dispatch-n (list [:next-question] [:active-page :ask-question])})))
 
 (comment
   (fn [cofx [event question-id answer-id]]
@@ -129,6 +129,6 @@
 
 (re-frame/reg-event-db
  :initialise-db
- (fn [db]
+ (fn [cofx]
    (console.log "Initialising!")
    db/default-value))

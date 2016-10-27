@@ -70,6 +70,12 @@
                     {:id 3 :answer "100 Billion" :correct true}
                     {:id 4 :answer "5 Trillion" :correct false}]}])
 
+(defn sanitize-answers [answers]
+  (into [] (map #(select-keys % [:id :answer]) answers)))
+
+(defn sanitize-question [question]
+  (assoc question :answers (sanitize-answers (:answers question))))
+
 (defrecord InMemoryDb [pool]
   db-protocol/DbActions
   (get-random-question [this]
