@@ -84,7 +84,7 @@
 (comment
   ;; :db (:spec (component/start (trivia.connectionpool/new-connectionpool {})))
   (migratus/create  {:store                :database
-                     :migration-dir        "migrations/"} "question")
+                     :migration-dir        "migrations/"} "users")
 
   (migratus/create  {:store                :database
                      :migration-dir        "migrations/"} "puzzle_migrations")

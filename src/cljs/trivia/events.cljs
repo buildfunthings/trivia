@@ -73,6 +73,7 @@
                  :params answer-id
                  :timeout 2000
                  :format (ajax/json-request-format)
+                 :with-credentials true
                  :response-format (ajax/json-response-format {:keywords? true})
                  :on-success [:answer-success]
                  :on-failure [:answer-failure]}}))
@@ -92,11 +93,18 @@
    (prn "Request failed: " result)
    db))
 
+(re-frame/reg-event-db
+ :request-failure
+ (fn [db [_ result]]
+   (prn "Request failed: " result)
+   db))
+
 (re-frame/reg-event-fx
  :next-question
  (fn [cofx]
    {:http-xhrio {:method :get
                  :uri (str locations/api "/question")
+                 :with-credentials true
                  :timeout 2000
                  :response-format (ajax/json-response-format {:keywords? true})
                  :on-success [:question-success]
@@ -113,7 +121,17 @@
  :login
  (fn [cofx [event data]]
    {:db (assoc (:db cofx) :name data)
-    :dispatch [:login-success]}))
+    :http-xhrio {:method :post
+                 :uri (str locations/api "/login")
+                 :with-credentials true
+                 :params data
+                 :format (ajax/json-request-format)
+                 :timeout 2000
+                 :response-format (ajax/json-response-format {:keywords? true})
+                 :on-success [:login-success]
+                 :on-failure [:request-failure]}
+    ;;:dispatch [:login-success]
+    }))
 
 (re-frame/reg-event-fx
  :login-success

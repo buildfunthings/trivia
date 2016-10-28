@@ -70,6 +70,6 @@
   
   (let [{:keys [status body]} ((sut/handler (new-testfixture)) (mock/request :get "/api/question"))]
     ;;(log/info (slurp body))
-    (is (= status 200))))
+    (is (= status 401))))
 
 

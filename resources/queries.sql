@@ -24,3 +24,9 @@ SELECT correct
   FROM question_answer
  WHERE question_id = :question_id
    AND answer_id = :answer_id
+
+-- :name get-user-by-name :? :1
+-- :doc Get the user by its username
+SELECT username, hash
+  FROM users
+ WHERE username = :username

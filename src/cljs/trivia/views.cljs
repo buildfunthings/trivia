@@ -28,7 +28,8 @@
      ]))
 
 (defn login-panel []
-  (let [name (reagent/atom "")]
+  (let [name (reagent/atom "")
+        password (reagent/atom "")]
     (fn []
       [:div {:class "container"}
        [:div {:class "row"}
@@ -41,8 +42,9 @@
                     :on-change #(reset! name (-> % .-target .-value))}]]
           [:div {:class "form-group"}
            [:label {:for "inputPassword"} "Password"]
-           [:input {:type "password", :class "form-control", :id "inputPassword"}]]
-          [:div {:class "btn btn btn-primary" :on-click #(dispatch [:login @name])} "Log In"]
+           [:input {:type "password", :class "form-control", :id "inputPassword"
+                    :on-change #(reset! password (-> % .-target .-value))}]]
+          [:div {:class "btn btn btn-primary" :on-click #(dispatch [:login {:username @name :password @password}])} "Log In"]
           ]]]])))
 
 (defn create-game []

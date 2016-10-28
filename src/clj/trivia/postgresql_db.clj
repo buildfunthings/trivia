@@ -23,6 +23,10 @@
     (let [correct (:correct (is-answer-correct? (:spec pool)
                                                 {:question_id question-id :answer_id answer-id}))]
       (if (nil? correct) false correct)))
+
+  db-protocol/UserActions
+  (get-user [this username]
+    (get-user-by-name (:spec pool) {:username username}))
   
   component/Lifecycle
   (start [component]
