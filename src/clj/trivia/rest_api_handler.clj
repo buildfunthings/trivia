@@ -15,7 +15,17 @@
             [ring.util.http-response :refer :all]
             [schema.core :as s]
             [taoensso.timbre :as log]
-            [trivia.db-protocol :as db-protocol]))
+            [trivia.db-protocol :as db-protocol]
+            [re-frame.db :as db]))
+
+(s/defschema Game {:id s/Int ;; from game
+                   ;; from game_user
+                   :answered s/Int
+                   :correct s/Int
+                   ;; From game
+                   :date_started s/Str
+                   :date_completed s/Str
+                   })
 
 (s/defschema Answer {:id s/Int :answer s/Str})
 
@@ -57,6 +67,27 @@
 (defn authenticated? [req]
   (ba/authenticated? req))
 
+(defn convert-dates [{:keys [date_started date_completed] :as  game}]
+  (prn date_started)
+  (-> game
+      (assoc :date_started (.format (java.text.SimpleDateFormat. "yyyy/MM/dd HH:mm:ss") date_started))
+      (assoc :date_completed (if (nil? date_completed) ""
+                                 (.format (java.text.SimpleDateFormat. "yyyy/MM/dd HH:mm:ss") date_completed)))))
+
+(defn create-game [db {:keys [username] :as user}]
+  (log/info "Creating new game for user" user)
+  (let [game-id (db-protocol/create-game db username)]
+    (log/info "Game created, id" game-id)
+    (let [res (convert-dates (db-protocol/get-game db game-id username))]
+      (log/info "Result " res)
+      res)))
+
+(comment
+  (def db (component/start (trivia.postgresql-db/new-postresql-db {:pool (component/start (trivia.connectionpool/new-connectionpool {}))})))
+  
+  (db-protocol/get-game db 13 "arjen")
+  )
+
 (defn app [db]
   (api
    {:swagger {:ui "/api-docs"
@@ -83,6 +114,19 @@
                   (log/info "A new user signed up:" username)
                   (add-user-to-db db username (bh/derive password)))
 
+            (POST "/games" []
+                  :auth-rules authenticated?
+                  :current-user user
+                  :return Game
+                  (ok (create-game db user)))
+            
+            (GET "/games" []
+                 :auth-rules authenticated?
+                 :current-user user
+                 :return [Game]
+                 (log/info "Retrieving list of games for user" user)
+                 (ok []))
+            
             (GET "/question" []
                  :return Question
                  :auth-rules authenticated?

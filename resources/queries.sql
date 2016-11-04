@@ -34,3 +34,21 @@ SELECT username, hash
 -- :name add-user :<!
 -- :doc insert user to the database and return its id
 INSERT INTO users (username, hash) VALUES (:username, :hash) RETURNING id
+
+
+-- :name db-get-game :? :1
+-- :doc Retrieve a Game object from the DB
+SELECT g.id, g.date_started, g.date_completed, gu.answered, gu.correct
+  FROM game g
+ INNER JOIN users u ON u.username = :username
+ INNER JOIN game_users gu ON gu.game_id = g.id AND gu.user_id = u.id
+ WHERE g.id = :game_id
+
+-- :name db-create-game :<!
+-- :doc create a new game and return its id
+INSERT INTO game (date_started) VALUES (NOW()) RETURNING id
+
+-- :name db-add-user-to-game :!
+-- :doc Add a user to a game
+INSERT INTO game_users (game_id, user_id)
+ VALUES (:game_id, (SELECT id FROM users WHERE username=:username))
