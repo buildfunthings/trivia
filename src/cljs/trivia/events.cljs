@@ -13,6 +13,16 @@
       (assoc :answer-state :unknown)))
 
 (re-frame/reg-event-fx
+ :dosignup
+ (fn [cofx]
+   {:dispatch [:active-page :signup]}))
+
+(re-frame/reg-event-fx
+ :choose-opponents
+ (fn [cofx]
+   {:dispatch [:active-page :choose-opponents]}))
+
+(re-frame/reg-event-fx
  :create-game
  (fn [cofx]
    (let [db (:db cofx)
@@ -21,26 +31,6 @@
               (reset-game)
               (assoc :current-question q))
       :dispatch-n (list [:next-question] [:active-page :ask-question])})))
-
-(comment
-  (fn [cofx [event question-id answer-id]]
-   (let [db (:db cofx)
-         q (get-in cofx [:db :current-question])
-         answer (first (filter #(= (:id %) answer-id) (:answers q)))
-         state (:state db)
-         correct? (:correct answer)
-         ]
-     {:db  (-> db
-               (assoc :answer-state (condp = (:correct answer)
-                                         true :correct
-                                         false :incorrect
-                                         :unknown))
-               (assoc-in [:state (if correct? :correct :incorrect)]
-                         (inc (get state (if correct? :correct :incorrect)))))
-      :dispatch-later [(if (= (:round state) (:max-rounds state))
-                         {:ms 2000 :dispatch [:active-page :end-game]}
-                         {:ms 2000 :dispatch [:next-question]})]}
-     )))
 
 (re-frame/reg-event-fx
  :answer-success
