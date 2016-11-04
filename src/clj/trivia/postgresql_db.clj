@@ -27,6 +27,9 @@
   db-protocol/UserActions
   (get-user [this username]
     (get-user-by-name (:spec pool) {:username username}))
+
+  (add-user [this username hash]
+    (add-user (:spec pool) {:username username :hash hash}))
   
   component/Lifecycle
   (start [component]

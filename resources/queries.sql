@@ -30,3 +30,7 @@ SELECT correct
 SELECT username, hash
   FROM users
  WHERE username = :username
+
+-- :name add-user :<!
+-- :doc insert user to the database and return its id
+INSERT INTO users (username, hash) VALUES (:username, :hash) RETURNING id

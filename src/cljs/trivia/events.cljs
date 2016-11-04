@@ -56,6 +56,20 @@
    db))
 
 (re-frame/reg-event-fx
+ :signup
+ (fn [cofx [event username password]]
+   {:http-xhrio {:method :post
+                 :uri (str locations/api "/signup")
+                 :params {:username username
+                          :password password}
+                 :timeout 2000
+                 :format (ajax/json-request-format)
+                 :with-credentials true
+                 :response-format (ajax/json-response-format {:keywords? true})
+                 :on-success [:login-success]
+                 :on-failure [:request-failure]}}))
+
+(re-frame/reg-event-fx
  :submit-answer
  (fn [cofx [event question-id answer-id]]
    {:http-xhrio {:method :post

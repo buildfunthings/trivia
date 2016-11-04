@@ -31,6 +31,12 @@
 (defn get-user-from-db [db username]
   (db-protocol/get-user db username))
 
+(defn add-user-to-db [db username hash]
+  (let [id (db-protocol/add-user db username hash)]
+    (if (empty? id)
+      (assoc-in (internal-server-error) [:session :identity] nil)
+      (assoc-in (ok {:id id}) [:session :identity] {:username username}))))
+
 (defn access-error [request value]
   (unauthorized value))
 
@@ -70,6 +76,12 @@
                       (assoc-in (forbidden) [:session :identity] nil)
                       ))
                   )
+            
+            (POST "/signup" []
+                  :body-params [username :- String, password :- String]
+                  :summary "Sign an user up for our cool game."
+                  (log/info "A new user signed up:" username)
+                  (add-user-to-db db username (bh/derive password)))
 
             (GET "/question" []
                  :return Question
