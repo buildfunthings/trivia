@@ -82,12 +82,6 @@
       (log/info "Result " res)
       res)))
 
-(comment
-  (def db (component/start (trivia.postgresql-db/new-postresql-db {:pool (component/start (trivia.connectionpool/new-connectionpool {}))})))
-  
-  (db-protocol/get-game db 13 "arjen")
-  )
-
 (defn app [db]
   (api
    {:swagger {:ui "/api-docs"
@@ -111,7 +105,6 @@
             (POST "/signup" []
                   :body-params [username :- String, password :- String]
                   :summary "Sign an user up for our cool game."
-                  (log/info "A new user signed up:" username)
                   (add-user-to-db db username (bh/derive password)))
 
             (POST "/games" []
@@ -132,7 +125,6 @@
                  :auth-rules authenticated?
                  :current-user cur-user
                  :summary "Return a random question"
-                 (log/info "User requesting a question" (:username cur-user))
                  (ok (get-random-question db)))
 
             (POST "/question/:id" []
@@ -143,7 +135,6 @@
                   :body [answer-id s/Int]
                   :summary "Return true or false for the answer"
                   (let [a (db-protocol/correct-answer? db id answer-id)]
-                    (log/info "User" (:username cur-user) "provided an answer and it was" a)
                     (ok {:correct? a}))
                   ))))
 
