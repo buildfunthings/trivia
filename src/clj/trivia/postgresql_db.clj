@@ -24,9 +24,24 @@
                                                 {:question_id question-id :answer_id answer-id}))]
       (if (nil? correct) false correct)))
 
+  db-protocol/GameActions
+  (create-game [this username]
+    (let [game-id (:id (first (db-create-game (:spec pool))))]
+      (log/info "ID returned"  game-id)
+      (db-add-user-to-game (:spec pool) {:game_id game-id :username username})
+      game-id))
+  
+  (add-users-to-game [this game-id other-user])
+  (list-games [this username])
+  (get-game [this game-id username]
+    (db-get-game (:spec pool) {:game_id game-id :username username}))
+  
   db-protocol/UserActions
   (get-user [this username]
     (get-user-by-name (:spec pool) {:username username}))
+
+  (add-user [this username hash]
+    (add-user (:spec pool) {:username username :hash hash}))
   
   component/Lifecycle
   (start [component]
@@ -37,3 +52,9 @@
 
 (defn new-postresql-db [config-options]
   (map->PostgreSQL-DB config-options))
+
+
+
+
+
+

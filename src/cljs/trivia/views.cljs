@@ -7,7 +7,8 @@
     [:nav {:class "navbar navbar-inverse navbar-fixed-top", :role "navigation"}
      [:div {:class "container"}
       [:div {:class "navbar-header"}
-       [:button {:type "button", :class "navbar-toggle collapsed", :data-toggle "collapse", :data-target "#navbar", :aria-expanded "false", :aria-controls "navbar"}
+       [:button {:type "button", :class "navbar-toggle collapsed", :data-toggle "collapse",
+                 :data-target "#navbar", :aria-expanded "false", :aria-controls "navbar"}
         [:span {:class "sr-only"}
          "Toggle navigation"]
         [:span {:class "icon-bar"}]
@@ -44,13 +45,21 @@
            [:label {:for "inputPassword"} "Password"]
            [:input {:type "password", :class "form-control", :id "inputPassword"
                     :on-change #(reset! password (-> % .-target .-value))}]]
-          [:div {:class "btn btn btn-primary" :on-click #(dispatch [:login {:username @name :password @password}])} "Log In"]
-          ]]]])))
+          [:div {:class "btn btn btn-primary"
+                 :on-click #(dispatch [:login {:username @name :password @password}])} "Log In"]
+          ]]]
+       [:div {:class "row"}
+        [:div {:class "col-md-4 col-md-offset-4"}
+         "No account? "
+         [:a {:on-click #(dispatch [:dosignup])} "Create one now!"]]]
+       [:div {:class "row"}
+        [:div {:class "col-md-4 col-md-offset-4"}
+         [:a {:on-click #(dispatch [:choose-opponents])} "Experiment!"]]]])))
 
 (defn create-game []
   (fn []
     [:div {:class "container"}
-     (navbar)
+     ;;(navbar)
      [:div {:class "row"}
       [:div {:class "jumbotron"}
        [:div {:class "container"}
@@ -106,14 +115,66 @@
                 "You win!"
                 "You lose!")]
           [:p
-           [:a {:class "btn btn-primary btn-lg", :href "#", :role "button" :on-click #(dispatch [:create-game])}
+           [:a {:class "btn btn-primary btn-lg", :href "#", :role "button"
+                :on-click #(dispatch [:create-game])}
             "Create a new game »"]]]]]])))
 
+(defn are-these-the-same? [this that]
+  (= this that))
+
+(defn all-signup-fields-done? [username password confirm]
+  (and (not (empty? username))
+       (= password confirm)))
+
+(defn user-signup []
+  (let [username (reagent/atom "")
+        password (reagent/atom "")
+        pwconfirm (reagent/atom "")]
+    (fn []
+      [:div.col-md-6
+       [:div#logbox
+        [:form {:role "form"} 
+         [:h1 "Create an Account"]
+         [:div {:class "form-group"}
+          [:label {:for "inputUsername"} "Username"]
+          [:input {:type "text", :class "form-control", :id "inputUsername",
+                   :on-change #(reset! username (-> % .-target .-value))
+                   }]]
+         [:div {:class "form-group"}
+          [:label {:for "inputPassword"} "Password"]
+          [:input {:type "password", :class "form-control", :id "inputPassword",
+                   :on-change #(reset! password (-> % .-target .-value))
+                   }]]
+         [:div {:class (str "form-group" (when (not (are-these-the-same? @password @pwconfirm)) " has-error"))}
+          [:label {:for "inputConfirmPassword"} "Confirm Password"]
+          [:input {:type "password", :class "form-control", :id "inputConfirmPassword",
+                   :on-change #(reset! pwconfirm (-> % .-target .-value))
+                   }]]
+         
+         [:div {:class "btn btn-primary" :disabled (not (all-signup-fields-done? @username
+                                                                                 @password
+                                                                                 @pwconfirm))
+                :on-click #(dispatch [:signup @username @password])
+                } "Create Account"]
+         ]]])))
+
+(defn opponents []
+  (fn []
+    [:div.row
+     [:div.col-md-8.col-md-offset-2
+      [:p "Select oponents"]
+      [:ul
+       [:li "Rebecca"]
+       [:li "Jelle"]
+       [:li "Binky"]]
+      [:p [:a.btn.btn-default {:href "#" :role "button"} "Create Game »"]]]]))
 
 (defmulti pages identity)
 
+(defmethod pages :signup [] [(user-signup)])
 (defmethod pages :login [] [(login-panel)])
 (defmethod pages :create-game [] [(create-game)])
+(defmethod pages :choose-opponents [] [(opponents)])
 (defmethod pages :ask-question [] [(ask-question)])
 (defmethod pages :end-game [] [(end-game)])
 
