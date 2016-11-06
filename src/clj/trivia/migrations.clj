@@ -3,7 +3,8 @@
             [com.stuartsierra.component :as component]
             [environ.core :refer [env]]
             [migratus.core :as migratus]
-            [taoensso.timbre :as log]))
+            [taoensso.timbre :as log]
+            [clojure.java.io :as io]))
 
 (defn already-migrated? [db id]
   (= 1 (:migrated (first (j/query db ["select count(*) as migrated from puzzle_migrations where id=?" id])))))
@@ -54,7 +55,7 @@
       (log/info "Puzzle set" setid "already migrated"))))
 
 (defn read-puzzle-data []
-  (read-string (slurp "resources/puzzle-packs.edn")))
+  (read-string (slurp (io/resource "puzzle-packs.edn"))))
 
 (defn migrate-puzzles [db-spec]
   (log/info "Migrating puzzle database")
