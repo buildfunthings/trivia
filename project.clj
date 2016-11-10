@@ -20,7 +20,7 @@
                  [org.clojure/java.jdbc "0.6.1"]
                  [org.clojure/test.check "0.9.0"]
                  [org.clojure/tools.namespace "0.2.11"]
-                 [org.postgresql/postgresql "9.4.1211"]
+                 [org.postgresql/postgresql "9.4.1212"]
                  [prismatic/schema "1.1.3"]
                  [re-frame "0.8.0"]
                  [reagent "0.6.0"]
@@ -53,7 +53,7 @@
                        :prep-tasks ["compile" ["cljsbuild" "once" "min"]]
                        }
              :dev [:dev-overrides
-                   {:dependencies [[binaryage/devtools "0.8.2"]
+                   {:dependencies [[binaryage/devtools "0.8.3"]
                                    [com.cemerick/piggieback "0.2.1"] 
                                    [figwheel-sidecar "0.5.8"]]
                     :plugins [[lein-figwheel "0.5.7"]

@@ -33,7 +33,7 @@ credentials."
   (db-protocol/correct-answer? db question-id answer-id))
 
 (defn- convert-dates [{:keys [date_started date_completed] :as  game}]
-  (prn date_started)
+  ;;(prn date_started)
   (-> game
       (assoc :date_started (.format (java.text.SimpleDateFormat. "yyyy/MM/dd HH:mm:ss") date_started))
       (assoc :date_completed (if (nil? date_completed) ""

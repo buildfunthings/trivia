@@ -33,6 +33,7 @@
   
   (add-users-to-game [this game-id other-user])
   (list-games [this username])
+  
   (get-game [this game-id username]
     (db-get-game (:spec pool) {:game_id game-id :username username}))
   
