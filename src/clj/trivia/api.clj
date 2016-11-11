@@ -43,7 +43,10 @@ credentials."
   "Create a new game and add the current user to it. If desired, multiple users can 
 be added to the same game."
   [db {:keys [username] :as user}]
-  (log/info "Creating new game for user" user)
   (let [game-id (db-protocol/create-game db username)]
-    (log/info "Game created, id" game-id)
     (convert-dates (db-protocol/get-game db game-id username))))
+
+(defn get-game-questions
+  "Retrieve the set of questions that are part of a game identified by `id`"
+  [db game-id {:keys [username]}]
+  (db-protocol/get-game-questions db game-id username))

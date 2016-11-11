@@ -14,14 +14,15 @@
             [ring.middleware
              [cors :as cors]
              [logger :as logger]]
-            [ring.util.http-response :refer :all]
+            [ring.util
+             [http-response :refer :all]
+             [response :as response]]
             [schema.core :as s]
             [taoensso.timbre :as log]
             [trivia
              [api :as api]
              [db-protocol :as db-protocol]
              [schema :as schema]]))
-
 
 (defn access-error [request value]
   (unauthorized value))
@@ -79,6 +80,14 @@
                  :return [schema/Game]
                  (log/info "Retrieving list of games for user" user)
                  (ok []))
+
+            (GET "/games/:id/questions" []
+                 :summary  "Retrieving list of questions for a specified game"
+                 :path-params [id :- Long]
+                 :auth-rules authenticated?
+                 :current-user user
+                 :return [schema/Question]
+                 (ok (api/get-game-questions db id user)))
             
             (GET "/question" []
                  :return schema/Question
@@ -106,6 +115,7 @@
 (defn handler [db]
   (-> (routes
        (app db)
+       (GET "/" [] (response/redirect "/index.html"))
        (route/resources "/")
        (route/not-found "404 Not Found - oeps"))
 ;;      (logger/wrap-with-logger :info (fn [x] (prn x)))

@@ -13,7 +13,7 @@
    :answer-state :unknown
    
    :questions [{:id 1234
-                :question "How cool is ClojureScript?"
+                :question "Something went horribly wrong!"
                 :answers [{:id 1 :answer "Meh" :correct false}
                           {:id 2 :answer "It's ok" :correct false}
                           {:id 3 :answer "(awesome \"it is\")" :correct true}

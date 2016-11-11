@@ -23,14 +23,41 @@
    {:dispatch [:active-page :choose-opponents]}))
 
 (re-frame/reg-event-fx
+ :get-questions-success
+ (fn [{:keys [db]} [_ questions]]
+   {:db (assoc db :questions questions)
+    :dispatch-n (list [:next-question] [:active-page :ask-question])
+    }))
+
+(re-frame/reg-event-fx
+ :create-game-success
+ (fn [{:keys [db]} [_ game]]
+   {:db (assoc db :server-state game)
+    :http-xhrio {:method :get
+                 :uri (str locations/api "/games/" (:id game) "/questions")
+                 :timeout 2000
+                 :with-credentials true
+                 :response-format (ajax/json-response-format {:keywords? true})
+                 :on-success [:get-questions-success]
+                 :on-failure [:request-failure]}}))
+
+(re-frame/reg-event-fx
  :create-game
  (fn [cofx]
    (let [db (:db cofx)
          q (rand-nth (:questions db))]
      {:db (-> db
-              (reset-game)
-              (assoc :current-question q))
-      :dispatch-n (list [:next-question] [:active-page :ask-question])})))
+              (reset-game))
+      :http-xhrio {:method :post
+                   :uri (str locations/api "/games")
+                   :params {}
+                   :timeout 2000
+                   :format (ajax/json-request-format)
+                   :with-credentials true
+                   :response-format (ajax/json-response-format {:keywords? true})
+                   :on-success [:create-game-success]
+                   :on-failure [:request-failure]}
+      })))
 
 (re-frame/reg-event-fx
  :answer-success
@@ -40,9 +67,9 @@
          correct? (:correct? result)]
      {:db  (-> db
                (assoc :answer-state (condp = correct?
-                                         true :correct
-                                         false :incorrect
-                                         :unknown))
+                                      true :correct
+                                      false :incorrect
+                                      :unknown))
                (assoc-in [:state (if correct? :correct :incorrect)]
                          (inc (get state (if correct? :correct :incorrect)))))
       :dispatch-later [(if (= (:round state) (:max-rounds state))
@@ -105,15 +132,24 @@
 
 (re-frame/reg-event-fx
  :next-question
- (fn [cofx]
-   {:http-xhrio {:method :get
-                 :uri (str locations/api "/question")
-                 :with-credentials true
-                 :timeout 2000
-                 :response-format (ajax/json-response-format {:keywords? true})
-                 :on-success [:question-success]
-                 :on-failure [:question-failure]}
-    }
+ (fn [{:keys [db]}]
+   (let [cq (first (:questions db))
+         rq (rest (:questions db))
+         round (get-in db [:state :round])]
+     
+     {:db (-> db
+              (assoc-in [:state :round] (inc round))
+              (assoc :answer-state :unknown)
+              (assoc :current-question cq)
+              (assoc :questions rq))})
+   ;; {:http-xhrio {:method :get
+   ;;               :uri (str locations/api "/question")
+   ;;               :with-credentials true
+   ;;               :timeout 2000
+   ;;               :response-format (ajax/json-response-format {:keywords? true})
+   ;;               :on-success [:question-success]
+   ;;               :on-failure [:question-failure]}
+   ;;  }
    ))
 
 (re-frame/reg-event-db
