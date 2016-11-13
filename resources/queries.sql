@@ -52,3 +52,20 @@ INSERT INTO game (date_started) VALUES (NOW()) RETURNING id
 -- :doc Add a user to a game
 INSERT INTO game_users (game_id, user_id)
  VALUES (:game_id, (SELECT id FROM users WHERE username=:username))
+
+-- :name associate-questions :!
+-- :doc Associates 5 random questions to a game
+INSERT INTO game_questions (game_id, question_id) 
+     SELECT :game_id, id
+       FROM question
+      ORDER BY RANDOM()
+      LIMIT 5
+
+-- :name get-questions-for-game :?
+-- :doc reteive all the questions for a game
+SELECT q.id as question_id, q.text as question_text, a.id as answer_id, a.text as answer_text
+  FROM question q
+ INNER JOIN question_answer qa ON qa.question_id = q.id
+ INNER JOIN answer a ON a.id = qa.answer_id
+ INNER JOIN game_questions gq ON gq.question_id = q.id AND gq.game_id = :game_id
+
