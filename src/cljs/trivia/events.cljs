@@ -44,8 +44,7 @@
 (re-frame/reg-event-fx
  :create-game
  (fn [cofx]
-   (let [db (:db cofx)
-         q (rand-nth (:questions db))]
+   (let [db (:db cofx)]
      {:db (-> db
               (reset-game))
       :http-xhrio {:method :post
