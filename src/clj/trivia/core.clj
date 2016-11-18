@@ -6,6 +6,9 @@
             [trivia.system :as system]
             [taoensso.timbre :as log]))
 
+;; Exclude the noisy c3p0 datasource output from logging
+(log/merge-config! {:ns-blacklist ["com.mchange.v2.*"]})
+
 (def sys nil)
 
 (defn init
