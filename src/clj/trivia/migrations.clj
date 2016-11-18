@@ -70,7 +70,7 @@
                   :migration-dir        "migrations/"
                   :migration-table-name "schema_migrations"
                   :db (:spec pool)}]
-      (log/info "Running migrations with spec: " config)
+      (log/info "Running migrations")
       (migratus/migrate config)
       (migrate-puzzles (:spec pool)))
     component)
