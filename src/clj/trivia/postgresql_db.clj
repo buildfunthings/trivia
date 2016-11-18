@@ -21,15 +21,22 @@
   (let [data  (get-questions-for-game db {:game_id game-id :username username})]
     (map #(process-question %) (group-by :question_id data))))
 
+(defn- verify-answer [db game-id question-id answer-id username]
+  (let [{:keys [correct]} (is-answer-correct? db
+                                              {:question_id question-id :answer_id answer-id})]
+    (db-update-player-meta db {:username username
+                               :game_id game-id
+                               :nr_answered 1
+                               :nr_correct (if correct 1 0)})
+    (if (nil? correct) false correct)))
+
+(defn- get-leaderboard [db game-id]
+  (apply list (db-get-leader-board db {:game_id game-id})))
+
 (defrecord PostgreSQL-DB [pool]
   db-protocol/DbActions
   (get-random-question [this]
     (create-question (get-question-data (:spec pool) (get-random-question-id (:spec pool)))))
-  
-  (correct-answer? [this question-id answer-id]
-    (let [correct (:correct (is-answer-correct? (:spec pool)
-                                                {:question_id question-id :answer_id answer-id}))]
-      (if (nil? correct) false correct)))
 
   db-protocol/GameActions
   (create-game [this username]
@@ -46,6 +53,12 @@
 
   (get-game-questions [this game-id username]
     (get-game-questions-fn (:spec pool) game-id username))
+
+  (correct-answer? [this game-id question-id answer-id username]
+    (verify-answer (:spec pool) game-id question-id answer-id username))
+
+  (leaderboard [this game-id]
+    (get-leaderboard (:spec pool) game-id))
   
   db-protocol/UserActions
   (get-user [this username]

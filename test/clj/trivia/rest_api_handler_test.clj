@@ -49,14 +49,13 @@
                     (sut/build-cors-list s))))))
 
 (defrecord TestFixture []
-    db-protocol/DbActions
+  db-protocol/DbActions
   (get-random-question [this]
     {:id 1234
      :question "How cool is ClojureScript?"
      :answers [{:id 1 :answer "Meh"}]})
   
-  (correct-answer? [this question-id answer-id]
-    true))
+  )
 
 (defn new-testfixture []
   (map->TestFixture {}))
