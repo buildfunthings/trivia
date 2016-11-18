@@ -7,6 +7,16 @@
    (:state db)))
 
 (re-frame/reg-sub
+ :leaderboard
+ (fn [db _]
+   (:leaderboard db)))
+
+(re-frame/reg-sub
+ :server-state
+ (fn [db _]
+   (:server-state db)))
+
+(re-frame/reg-sub
  :current-question
  (fn [db _]
    (:current-question db)))

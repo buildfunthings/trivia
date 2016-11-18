@@ -29,8 +29,8 @@ credentials."
 
 (defn verify-answer
   "Check if the answer to a question is correct."
-  [db question-id answer-id]
-  (db-protocol/correct-answer? db question-id answer-id))
+  [db game-id question-id answer-id username]
+  (db-protocol/correct-answer? db game-id question-id answer-id username))
 
 (defn- convert-dates [{:keys [date_started date_completed] :as  game}]
   ;;(prn date_started)
@@ -50,3 +50,8 @@ be added to the same game."
   "Retrieve the set of questions that are part of a game identified by `id`"
   [db game-id {:keys [username]}]
   (db-protocol/get-game-questions db game-id username))
+
+(defn get-leaderboard
+  "Retrieve a leaderboard for a game"
+  [db game-id]
+  (db-protocol/leaderboard db game-id))

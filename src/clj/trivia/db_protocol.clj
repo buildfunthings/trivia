@@ -11,9 +11,10 @@
   (add-users-to-game [this game-id other-user])
   (list-games [this username])
   (get-game [this game-id username])
-  (get-game-questions [this game-id username]))
+  (get-game-questions [this game-id username])
+  (correct-answer? [this game-id questionid answerid username])
+  (leaderboard [this game-id]))
 
 (defprotocol DbActions
   "Protocol that holds DB actions"
-  (get-random-question [this])
-  (correct-answer? [this questionid answerid]))
+  (get-random-question [this]))

@@ -1,6 +1,7 @@
 (ns trivia.views
-  (:require [re-frame.core :as re-frame :refer [subscribe dispatch]]
-            [reagent.core :as reagent]))
+  (:require [re-frame.core :as re-frame :refer [dispatch subscribe]]
+            [reagent.core :as reagent]
+            [taoensso.timbre :as log]))
 
 (defn navbar []
   (let [name (re-frame/subscribe [:name])]
@@ -77,7 +78,8 @@
 (defn ask-question []
   (let [question (re-frame/subscribe [:current-question])
         answer-state (re-frame/subscribe [:answer-state])
-        state (re-frame/subscribe [:state])]
+        state (re-frame/subscribe [:state])
+        server-state (re-frame/subscribe [:server-state])]
     (fn []
       [:div {:class "container"}
        [:div {:class "row"}
@@ -88,9 +90,9 @@
         [:div {:class "col-md-8 col-md-offset-2"}
          [:div {:class "jumbotron"}
           [:div {:class (str "container text-center " (condp = @answer-state
-                                                       :correct "correct-answer"
-                                                       :incorrect "incorrect-answer"
-                                                       :unknown ""))}
+                                                        :correct "correct-answer"
+                                                        :incorrect "incorrect-answer"
+                                                        :unknown ""))}
            [:h2 (:question @question)]
            ]]
          ]]
@@ -100,20 +102,39 @@
          ]]
        [:div {:class "row"}
         [:div {:class "col-md-8 col-md-offset-2"}
-         @state
+         @state - @server-state
          ]]])))
 
+(defn list-player [{:keys [id username correct]}]
+  ^{:key id}
+  [:tr
+   [:th.row id]
+   [:td username]
+   [:td correct]])
+
+(defn list-players [leaderboard]
+  (map #(list-player %) leaderboard))
+
 (defn end-game []
-  (let [state (re-frame/subscribe [:state])]
+  (let [state (re-frame/subscribe [:state])
+       leaderboard (re-frame/subscribe [:leaderboard])]
     (fn []
-      [:div {:class "container"}
-       [:div {:class "row"}
-        [:div {:class "jumbotron"}
-         [:div {:class "container"}
-          [:h1 "Game ended (" (:correct @state) " vs " (:incorrect @state) ")"]
-          [:p (if (> (:correct @state) (:incorrect @state))
-                "You win!"
-                "You lose!")]
+      [:div.container
+       [:div.row
+        [:div.col-md-6.col-md-offset-3
+         [:h1 "Leaderboard"]
+         [:div.row
+          [:div
+           [:table.table
+            [:thead
+             [:tr
+              [:th "#"]
+              [:th "Username"]
+              [:th "Correct"]]]
+            [:tbody
+             (doall (list-players @leaderboard))
+             ]]]]
+         [:div.row
           [:p
            [:a {:class "btn btn-primary btn-lg", :href "#", :role "button"
                 :on-click #(dispatch [:create-game])}
@@ -133,7 +154,7 @@
     (fn []
       [:div.col-md-6
        [:div#logbox
-        [:form {:role "form"} 
+        [:form {:role "form"}
          [:h1 "Create an Account"]
          [:div {:class "form-group"}
           [:label {:for "inputUsername"} "Username"]
@@ -150,7 +171,7 @@
           [:input {:type "password", :class "form-control", :id "inputConfirmPassword",
                    :on-change #(reset! pwconfirm (-> % .-target .-value))
                    }]]
-         
+
          [:div {:class "btn btn-primary" :disabled (not (all-signup-fields-done? @username
                                                                                  @password
                                                                                  @pwconfirm))

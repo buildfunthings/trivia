@@ -80,13 +80,6 @@
   db-protocol/DbActions
   (get-random-question [this]
     (rand-nth db))
-
-  (correct-answer? [this question-id answer-id]
-    (let [question (first (filter #(= (:id %) question-id) db))
-          answer (first (filter #(= (:id %) answer-id) (:answers question)))]
-      (if (nil? answer)
-        false
-        (:correct answer))))
   
   component/Lifecycle
   (start [component]

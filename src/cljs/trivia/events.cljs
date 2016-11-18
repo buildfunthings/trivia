@@ -42,6 +42,26 @@
                  :on-failure [:request-failure]}}))
 
 (re-frame/reg-event-fx
+ :get-leaderboard-success
+ (fn [{:keys [db]} [_ leaderboard]]
+   (prn leaderboard)
+   {:db (assoc db :leaderboard leaderboard)
+    :dispatch [:active-page :end-game]
+    }))
+
+(re-frame/reg-event-fx
+ :end-game
+ (fn [{:keys [db]}]
+   {:http-xhrio {:method :get
+                 :uri (str locations/api "/games/" (get-in db [:server-state :id]) "/leaderboard")
+                 :timeout 2000
+                 :with-credentials true
+                 :response-format (ajax/json-response-format {:keywords? true})
+                 :on-success [:get-leaderboard-success]
+                 :on-failure [:request-failure]}
+    }))
+
+(re-frame/reg-event-fx
  :create-game
  (fn [cofx]
    (let [db (:db cofx)]
@@ -72,7 +92,7 @@
                (assoc-in [:state (if correct? :correct :incorrect)]
                          (inc (get state (if correct? :correct :incorrect)))))
       :dispatch-later [(if (= (:round state) (:max-rounds state))
-                         {:ms 2000 :dispatch [:active-page :end-game]}
+                         {:ms 2000 :dispatch [:end-game]}
                          {:ms 2000 :dispatch [:next-question]})]})))
 
 (re-frame/reg-event-db
@@ -97,9 +117,9 @@
 
 (re-frame/reg-event-fx
  :submit-answer
- (fn [cofx [event question-id answer-id]]
+ (fn [{:keys [db]} [event question-id answer-id]]
    {:http-xhrio {:method :post
-                 :uri (str locations/api "/question/" question-id)
+                 :uri (str locations/api "/games/" (get-in db [:server-state :id]) "/verify/" question-id)
                  :params answer-id
                  :timeout 2000
                  :format (ajax/json-request-format)

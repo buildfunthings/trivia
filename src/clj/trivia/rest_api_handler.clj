@@ -50,11 +50,12 @@
               :spec "/swagger.json"
               :data {:info {:title "Trivia API"
                             :description "API for our Trivia game"}
-                     :tags [{:name "questions", :descriptions "Functions dealing with questions"}]}}}
+                     :tags [{:name "users", :descriptions "Functions dealing with users"}
+                            {:name "games", :descriptions "Functions dealing with games"}]}}}
    (context "/api" []
-            :tags ["question"]
 
             (POST "/login" []
+                  :tags ["users"]
                   :body-params [username :- String, password :- String]
                   :summary "Logs a user in"
                   (if (api/authenticate-user db username password)
@@ -62,6 +63,7 @@
                     (assoc-in (forbidden) [:session :identity] nil)))
             
             (POST "/signup" []
+                  :tags ["users"]
                   :body-params [username :- String, password :- String]
                   :summary "Sign an user up for our cool game."
                   (if (api/add-user-to-db db username (bh/derive password))
@@ -69,12 +71,14 @@
                     (assoc-in (internal-server-error) [:session :identity] nil)))
 
             (POST "/games" []
+                  :tags ["games"]
                   :auth-rules authenticated?
                   :current-user user
                   :return schema/Game
                   (ok (api/create-game db user)))
             
             (GET "/games" []
+                 :tags ["games"]
                  :auth-rules authenticated?
                  :current-user user
                  :return [schema/Game]
@@ -82,30 +86,44 @@
                  (ok []))
 
             (GET "/games/:id/questions" []
+                 :tags ["games"]
                  :summary  "Retrieving list of questions for a specified game"
                  :path-params [id :- Long]
                  :auth-rules authenticated?
                  :current-user user
                  :return [schema/Question]
                  (ok (api/get-game-questions db id user)))
+
+            (GET "/games/:game-id/leaderboard" []
+                 :tags ["games"]
+                 :summary  "Retrieving the leaderbord for a game"
+                 :path-params [game-id :- Long]
+                 :auth-rules authenticated?
+                 :current-user user
+                 :return schema/LeaderBoard
+                 (ok (api/get-leaderboard db game-id)))
+            
+            (POST "/games/:game-id/verify/:question-id" []
+                  :tags ["games"]
+                  :return schema/QuestionAnswer
+                  :auth-rules authenticated?
+                  :current-user cur-user
+                  :path-params [game-id :- s/Int
+                                question-id :- s/Int]
+                  :body [answer-id s/Int]
+                  :summary "Return true or false for the answer"
+                  (let [a (api/verify-answer db game-id question-id answer-id (:username cur-user))]
+                    (ok {:correct? a})))
             
             (GET "/question" []
+                 :tags ["deprecated"]
                  :return schema/Question
                  :auth-rules authenticated?
                  :current-user cur-user
                  :summary "Return a random question"
                  (ok (api/get-random-question db)))
 
-            (POST "/question/:id" []
-                  :return schema/QuestionAnswer
-                  :auth-rules authenticated?
-                  :current-user cur-user
-                  :path-params [id :- s/Int]
-                  :body [answer-id s/Int]
-                  :summary "Return true or false for the answer"
-                  (let [a (api/verify-answer db id answer-id)]
-                    (ok {:correct? a}))
-                  ))))
+            )))
 
 (defn build-cors-list [input]
   (if (empty? input)

@@ -69,3 +69,17 @@ SELECT q.id as question_id, q.text as question_text, a.id as answer_id, a.text a
  INNER JOIN answer a ON a.id = qa.answer_id
  INNER JOIN game_questions gq ON gq.question_id = q.id AND gq.game_id = :game_id
 
+-- :name db-update-player-meta :!
+-- :doc Update player metadata
+UPDATE game_users
+   SET answered = answered + :nr_answered,
+       correct = correct + :nr_correct
+ WHERE game_id = :game_id
+   AND user_id = (SELECT id FROM users WHERE username=:username)
+
+-- :name db-get-leader-board :?
+-- :doc Retrieve the leaderboard for a game
+select u.id, u.username, gu.answered, gu.correct
+  from game_users gu
+ inner join users u on u.id = gu.user_id
+ where game_id = :game_id
