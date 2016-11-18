@@ -10,7 +10,6 @@
 (defrecord ConnectionPool [spec]
   component/Lifecycle
   (start [component]
-    (log/info "Creating new database pool for env " (env :database-url))
     (let [uri (java.net.URI. (env :database-url))
           [username password] (str/split (.getUserInfo uri) #":")]
       (assoc component :spec  (pool/make-datasource-spec
