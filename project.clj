@@ -1,4 +1,4 @@
-(defproject trivia "0.0.11"
+(defproject trivia "0.0.12-SNAPSHOT"
   :description "Trivia Game"
   :url "https://www.buildfunthings.com"
 
