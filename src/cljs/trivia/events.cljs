@@ -62,21 +62,36 @@
     }))
 
 (re-frame/reg-event-fx
+ :friend-list-success
+ (fn [{:keys [db]} [_ friends]]
+   {:db (assoc db :friends friends)}))
+
+(re-frame/reg-event-fx
+ :get-friend-list
+ (fn [{:keys [db]}]
+   {:http-xhrio {:method :get
+                 :uri (str locations/api "/users")
+                 :timeout 2000
+                 :with-credentials true
+                 :response-format (ajax/json-response-format {:keywords? true})
+                 :on-success [:friend-list-success]
+                 :on-failure [:request-failure]}
+    }))
+
+(re-frame/reg-event-fx
  :create-game
- (fn [cofx]
-   (let [db (:db cofx)]
-     {:db (-> db
-              (reset-game))
-      :http-xhrio {:method :post
-                   :uri (str locations/api "/games")
-                   :params {}
-                   :timeout 2000
-                   :format (ajax/json-request-format)
-                   :with-credentials true
-                   :response-format (ajax/json-response-format {:keywords? true})
-                   :on-success [:create-game-success]
-                   :on-failure [:request-failure]}
-      })))
+ (fn [{:keys [db]} [_ players]]
+   {:db (-> db (reset-game))
+    :http-xhrio {:method :post
+                 :uri (str locations/api "/games")
+                 :params {:players players}
+                 :timeout 2000
+                 :format (ajax/json-request-format)
+                 :with-credentials true
+                 :response-format (ajax/json-response-format {:keywords? true})
+                 :on-success [:create-game-success]
+                 :on-failure [:request-failure]}
+    }))
 
 (re-frame/reg-event-fx
  :answer-success
@@ -195,7 +210,10 @@
 (re-frame/reg-event-fx
  :login-success
  (fn [cofx]
-   {:dispatch [:active-page :create-game]}))
+   {:dispatch-n (list
+                 [:get-friend-list]
+                 [:active-page :create-game]
+                 )}))
 
 (re-frame/reg-event-db
  :name

@@ -53,7 +53,6 @@
                      :tags [{:name "users", :descriptions "Functions dealing with users"}
                             {:name "games", :descriptions "Functions dealing with games"}]}}}
    (context "/api" []
-
             (POST "/login" []
                   :tags ["users"]
                   :body-params [username :- String, password :- String]
@@ -70,12 +69,20 @@
                     (assoc-in (ok {}) [:session :identity] {:username username})
                     (assoc-in (internal-server-error) [:session :identity] nil)))
 
+            (GET "/users" []
+                 :tags ["users"]
+                 :auth-rules authenticated?
+                 :current-user user
+                 :return [schema/User]
+                 (ok (api/get-friends db (:username user))))
+            
             (POST "/games" []
                   :tags ["games"]
+                  :body-params [players :- [Long]]
                   :auth-rules authenticated?
                   :current-user user
                   :return schema/Game
-                  (ok (api/create-game db user)))
+                  (ok (api/create-game db user players)))
             
             (GET "/games" []
                  :tags ["games"]

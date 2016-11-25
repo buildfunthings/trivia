@@ -20,6 +20,9 @@ credentials."
       false
       true)))
 
+(defn get-friends [db username]
+  (db-protocol/get-friends db username))
+
 ;;; Questions and games
 
 (defn get-random-question
@@ -42,8 +45,8 @@ credentials."
 (defn create-game
   "Create a new game and add the current user to it. If desired, multiple users can 
 be added to the same game."
-  [db {:keys [username] :as user}]
-  (let [game-id (db-protocol/create-game db username)]
+  [db {:keys [username] :as user} players]
+  (let [game-id (db-protocol/create-game db username players)]
     (convert-dates (db-protocol/get-game db game-id username))))
 
 (defn get-game-questions

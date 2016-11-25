@@ -33,17 +33,22 @@
 (defn- get-leaderboard [db game-id]
   (apply list (db-get-leader-board db {:game_id game-id})))
 
+(defn- create-game [{:keys [spec]} username players]
+  (let [game-id (:id (first (db-create-game spec)))]
+    (associate-questions spec {:game_id game-id})
+    (db-add-user-to-game spec {:game_id game-id :username username})
+      (if-not (empty? players)
+        (doall (map #(db-add-user-to-game-by-id spec {:game_id game-id :user_id %}) players)))
+      game-id))
+
 (defrecord PostgreSQL-DB [pool]
   db-protocol/DbActions
   (get-random-question [this]
     (create-question (get-question-data (:spec pool) (get-random-question-id (:spec pool)))))
 
   db-protocol/GameActions
-  (create-game [this username]
-    (let [game-id (:id (first (db-create-game (:spec pool))))]
-      (associate-questions (:spec pool) {:game_id game-id})
-      (db-add-user-to-game (:spec pool) {:game_id game-id :username username})
-      game-id))
+  (create-game [this username players]
+    (create-game pool username players))
   
   (add-users-to-game [this game-id other-user])
   (list-games [this username])
@@ -66,6 +71,9 @@
 
   (add-user [this username hash]
     (add-user (:spec pool) {:username username :hash hash}))
+
+  (get-friends [this username]
+    (db-get-friends (:spec pool) {:username username}))
   
   component/Lifecycle
   (start [component]

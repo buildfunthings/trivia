@@ -29,7 +29,8 @@
                  [ring/ring-mock "0.3.0"]
                  [buddy/buddy-core "1.1.1"]
                  [buddy/buddy-auth "1.2.0"]
-                 [buddy/buddy-hashers "1.0.0"]]
+                 [buddy/buddy-hashers "1.0.0"]
+                 [reagent-forms "0.5.28"]]
 
   :plugins [[lein-cljsbuild "1.1.4"]
             [lein-environ "1.1.0"]]

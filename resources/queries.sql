@@ -35,6 +35,11 @@ SELECT username, hash
 -- :doc insert user to the database and return its id
 INSERT INTO users (username, hash) VALUES (:username, :hash) RETURNING id
 
+-- :name db-get-friends :? :*
+-- :doc retrieve the friend list
+SELECT id, username
+  FROM users
+ WHERE username != :username
 
 -- :name db-get-game :? :1
 -- :doc Retrieve a Game object from the DB
@@ -52,6 +57,12 @@ INSERT INTO game (date_started) VALUES (NOW()) RETURNING id
 -- :doc Add a user to a game
 INSERT INTO game_users (game_id, user_id)
  VALUES (:game_id, (SELECT id FROM users WHERE username=:username))
+
+-- :name db-add-user-to-game-by-id :!
+-- :doc Add a user to a game
+INSERT INTO game_users (game_id, user_id)
+ VALUES (:game_id, :user_id)
+
 
 -- :name associate-questions :!
 -- :doc Associates 5 random questions to a game

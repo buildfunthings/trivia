@@ -3,7 +3,7 @@
 
 (def default-value
   {:name "Arjen"
-
+   :friends []
    :state {:round 1
            :max-rounds 5
            :correct 0

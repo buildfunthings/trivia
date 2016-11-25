@@ -1,5 +1,6 @@
 (ns trivia.views
   (:require [re-frame.core :as re-frame :refer [dispatch subscribe]]
+            [reagent-forms.core :as rf :refer [bind-fields]]
             [reagent.core :as reagent]
             [taoensso.timbre :as log]))
 
@@ -57,18 +58,33 @@
         [:div {:class "col-md-4 col-md-offset-4"}
          [:a {:on-click #(dispatch [:choose-opponents])} "Experiment!"]]]])))
 
+(defn create-player-form-entry [{:keys [id username]}]
+  ^{:key id} [:li.list-group-item {:key id} username])
+
+(defn select-player-form [friends]
+  (prn "Friends " (map #(:username %) friends))
+  [:ul.list-group {:field :multi-select :id :players}
+   (map #(create-player-form-entry %) friends)
+   ])
+
 (defn create-game []
-  (fn []
-    [:div {:class "container"}
-     ;;(navbar)
-     [:div {:class "row"}
-      [:div {:class "jumbotron"}
-       [:div {:class "container"}
-        [:h1 "Trivia Game!"]
-        [:p "The most exciting game since solitaire."]
-        [:p
-         [:a {:class "btn btn-primary btn-lg", :href "#", :role "button" :on-click #(dispatch [:create-game])}
-          "Create a new game »"]]]]]]))
+  (let [doc (reagent/atom {:players []})
+        friends (re-frame/subscribe [:friends])]
+     (fn []
+          [:div {:class "container"}
+           ;;(navbar)
+           [:div {:class "row"}
+            [:div {:class "jumbotron"}
+             [:div {:class "container"}
+              [:h1 "Trivia Game!"]
+              [:p "The most exciting game since solitaire."]]]
+
+            [:h1 "Select an opponent"]
+            [bind-fields (select-player-form @friends) doc]
+            [:p
+             [:a {:class "btn btn-primary btn-lg", :href "#", :role "button" :on-click #(dispatch [:create-game (:players @doc)])}
+              "Create a new game »"]]
+            [:p "Current document: " @doc]]])))
 
 (defn create-answer [question-id answer]
   ^{:key (:id answer)}
