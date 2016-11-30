@@ -4,31 +4,7 @@
             [reagent.core :as reagent]
             [taoensso.timbre :as log]))
 
-(defn navbar []
-  (let [name (re-frame/subscribe [:name])]
-    [:nav {:class "navbar navbar-inverse navbar-fixed-top", :role "navigation"}
-     [:div {:class "container"}
-      [:div {:class "navbar-header"}
-       [:button {:type "button", :class "navbar-toggle collapsed", :data-toggle "collapse",
-                 :data-target "#navbar", :aria-expanded "false", :aria-controls "navbar"}
-        [:span {:class "sr-only"}
-         "Toggle navigation"]
-        [:span {:class "icon-bar"}]
-        [:span {:class "icon-bar"}]
-        [:span {:class "icon-bar"}]
-        ]
-       [:a {:class "navbar-brand", :href "#"}
-        "Trivia Game"]
-       ]
-      [:div {:id "navbar", :class "navbar-collapse collapse"}
-       [:div {:class "nav navbar-nav navbar-right"}
-        [:ul {:class "nav navbar-nav"}
-         [:li
-          [:a {:href "#contact"}
-           @name]
-          ]]
-        ]]]
-     ]))
+
 
 (defn login-panel []
   (let [name (reagent/atom "")
@@ -91,7 +67,6 @@
   (let [friends (re-frame/subscribe [:friends])]
     (fn []
        [:div {:class "container"}
-            ;;(navbar)
             [:div {:class "row"}
              [:div {:class "jumbotron"}
               [:div {:class "container"}
