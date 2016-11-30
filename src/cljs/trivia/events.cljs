@@ -12,6 +12,16 @@
       (assoc-in [:state :incorrect] 0)
       (assoc :answer-state :unknown)))
 
+(re-frame/reg-event-db
+ :select-player
+ (fn [db [_ player]]
+   (let [friends (:friends db)]
+     (assoc db :friends 
+            (map #(if (= player (:id %))
+                    (assoc % :selected? (not (:selected? %)))
+                    %)
+                 friends)))))
+
 (re-frame/reg-event-fx
  :dosignup
  (fn [cofx]

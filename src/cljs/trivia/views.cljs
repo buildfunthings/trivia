@@ -4,31 +4,7 @@
             [reagent.core :as reagent]
             [taoensso.timbre :as log]))
 
-(defn navbar []
-  (let [name (re-frame/subscribe [:name])]
-    [:nav {:class "navbar navbar-inverse navbar-fixed-top", :role "navigation"}
-     [:div {:class "container"}
-      [:div {:class "navbar-header"}
-       [:button {:type "button", :class "navbar-toggle collapsed", :data-toggle "collapse",
-                 :data-target "#navbar", :aria-expanded "false", :aria-controls "navbar"}
-        [:span {:class "sr-only"}
-         "Toggle navigation"]
-        [:span {:class "icon-bar"}]
-        [:span {:class "icon-bar"}]
-        [:span {:class "icon-bar"}]
-        ]
-       [:a {:class "navbar-brand", :href "#"}
-        "Trivia Game"]
-       ]
-      [:div {:id "navbar", :class "navbar-collapse collapse"}
-       [:div {:class "nav navbar-nav navbar-right"}
-        [:ul {:class "nav navbar-nav"}
-         [:li
-          [:a {:href "#contact"}
-           @name]
-          ]]
-        ]]]
-     ]))
+
 
 (defn login-panel []
   (let [name (reagent/atom "")
@@ -62,29 +38,48 @@
   ^{:key id} [:li.list-group-item {:key id} username])
 
 (defn select-player-form [friends]
-  (prn "Friends " (map #(:username %) friends))
   [:ul.list-group {:field :multi-select :id :players}
    (map #(create-player-form-entry %) friends)
    ])
 
-(defn create-game []
-  (let [doc (reagent/atom {:players []})
-        friends (re-frame/subscribe [:friends])]
-     (fn []
-          [:div {:class "container"}
-           ;;(navbar)
-           [:div {:class "row"}
-            [:div {:class "jumbotron"}
-             [:div {:class "container"}
-              [:h1 "Trivia Game!"]
-              [:p "The most exciting game since solitaire."]]]
 
-            [:h1 "Select an opponent"]
-            [bind-fields (select-player-form @friends) doc]
-            [:p
-             [:a {:class "btn btn-primary btn-lg", :href "#", :role "button" :on-click #(dispatch [:create-game (:players @doc)])}
-              "Create a new game »"]]
-            [:p "Current document: " @doc]]])))
+(defn- create-checklist-item [{:keys [id username selected?]}]
+  ^{:key id} [:li.list-group-item {:on-click  #(re-frame/dispatch [:select-player id])
+                                   :class (when selected? "active")
+                                   :data-checked selected?}
+                 username])
+
+(defn select-player-form-2 [friends]
+  [:div.row
+   [:div.col-xs-12
+    [:h3.text-center "Select opponent"]
+    [:div.well
+     [:ul.list-group.checked-list-box
+      (map create-checklist-item friends)
+      ]]]])
+
+(defn- get-player-ids [friends]
+  (prn friends)
+  (let [s (filter #(= true (:selected? %)) friends)]
+    (map #(:id %) s)))
+
+(defn create-game []
+  (let [friends (re-frame/subscribe [:friends])]
+    (fn []
+       [:div {:class "container"}
+            [:div {:class "row"}
+             [:div {:class "jumbotron"}
+              [:div {:class "container"}
+               [:h1 "Trivia Game!"]
+               [:p "The most exciting game since solitaire."]]]
+             (select-player-form-2 @friends)
+             [:p
+              [:a {:class "btn btn-primary btn-lg", :href "#", :role "button"
+                   :on-click #(dispatch [:create-game (get-player-ids @friends)])}
+               "Create a new game »"]]
+             ]]
+
+      )))
 
 (defn create-answer [question-id answer]
   ^{:key (:id answer)}
@@ -217,7 +212,6 @@
 
 (defn show-page
   [page-name]
-  (prn "Page: " page-name)
   [pages page-name])
 
 (defn main-page []
