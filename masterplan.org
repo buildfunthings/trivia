@@ -1,0 +1,41 @@
+* The masterplan
+
+** Part I - the basics
+
+*** Build System
+*** Technology
+**** Components
+**** Database migrations
+**** REST API
+
+
+*** Players / User registration
+
+*** Game registration
+
+*** Questions
+
+*** VS Games
+
+
+** Part II - being more advanced
+
+*** WebSockets
+
+**** Realtime gameplay
+**** Observing games
+
+*** Increasing scalability
+
+- Decouple use management from gameplay
+- Using tokens for authentication
+
+
+** Part III - monitoring your service
+
+*** Graphite & Grafana
+
+Introduction to metrics, posting them to an agent and reporting on
+them.
+
+

@@ -1,6 +1,10 @@
 (ns trivia.schema
   (:require [schema.core :as s]))
 
+
+(s/defschema User {:id s/Int
+                   :username s/Str})
+
 (s/defschema PlayerMeta {:id s/Int
                          :username s/Str
                          :answered s/Int

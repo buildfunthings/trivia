@@ -12,6 +12,11 @@
    (:leaderboard db)))
 
 (re-frame/reg-sub
+ :friends
+ (fn [db _]
+   (:friends db)))
+
+(re-frame/reg-sub
  :server-state
  (fn [db _]
    (:server-state db)))
