@@ -18,7 +18,7 @@
    (let [friends (:friends db)]
      (assoc db :friends 
             (map #(if (= player (:id %))
-                    (assoc % :selected? (not (:selected? %)))
+                    (update % :selected? not)
                     %)
                  friends)))))
 
