@@ -1,11 +1,12 @@
 (ns trivia.views.end-game
   (:require [re-frame.core :as re-frame :refer [dispatch]]))
 
-(defn list-player [{:keys [id username correct]}]
+(defn list-player [{:keys [id username answered correct]}]
   ^{:key id}
   [:tr
    [:th.row id]
    [:td username]
+   [:td answered]
    [:td correct]])
 
 (defn list-players [leaderboard]
@@ -26,6 +27,7 @@
              [:tr
               [:th "#"]
               [:th "Username"]
+              [:th "Answered"]
               [:th "Correct"]]]
             [:tbody
              (doall (list-players @leaderboard))
@@ -33,5 +35,5 @@
          [:div.row
           [:p
            [:a {:class "btn btn-primary btn-lg", :href "#", :role "button"
-                :on-click #(dispatch [:create-game])}
+                :on-click #(dispatch [:game/create])}
             "Create a new game »"]]]]]])))

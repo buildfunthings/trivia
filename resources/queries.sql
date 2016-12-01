@@ -94,3 +94,4 @@ select u.id, u.username, gu.answered, gu.correct
   from game_users gu
  inner join users u on u.id = gu.user_id
  where game_id = :game_id
+ order by gu.correct DESC
