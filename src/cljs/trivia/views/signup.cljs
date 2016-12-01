@@ -37,6 +37,6 @@
          [:div {:class "btn btn-primary" :disabled (not (all-signup-fields-done? @username
                                                                                  @password
                                                                                  @pwconfirm))
-                :on-click #(dispatch [:signup @username @password])
+                :on-click #(dispatch [:signup/perform @username @password])
                 } "Create Account"]
          ]]])))

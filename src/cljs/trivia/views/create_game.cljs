@@ -11,7 +11,7 @@
 ;;    ])
 
 (defn- create-checklist-item [{:keys [id username selected?]}]
-  ^{:key id} [:li.list-group-item {:on-click  #(re-frame/dispatch [:select-player id])
+  ^{:key id} [:li.list-group-item {:on-click  #(re-frame/dispatch [:game/select-player id])
                                    :class (when selected? "active")
                                    :data-checked selected?}
                  username])
@@ -42,7 +42,7 @@
              (select-player-form-2 @friends)
              [:p
               [:a {:class "btn btn-primary btn-lg", :href "#", :role "button"
-                   :on-click #(dispatch [:create-game (get-player-ids @friends)])}
+                   :on-click #(dispatch [:game/create (get-player-ids @friends)])}
                "Create a new game »"]]
              ]]
 

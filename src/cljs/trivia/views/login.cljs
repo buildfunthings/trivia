@@ -20,12 +20,9 @@
            [:input {:type "password", :class "form-control", :id "inputPassword"
                     :on-change #(reset! password (-> % .-target .-value))}]]
           [:div {:class "btn btn btn-primary"
-                 :on-click #(dispatch [:login {:username @name :password @password}])} "Log In"]
+                 :on-click #(dispatch [:login/post {:username @name :password @password}])} "Log In"]
           ]]]
        [:div {:class "row"}
         [:div {:class "col-md-4 col-md-offset-4"}
          "No account? "
-         [:a {:on-click #(dispatch [:dosignup])} "Create one now!"]]]
-       [:div {:class "row"}
-        [:div {:class "col-md-4 col-md-offset-4"}
-         [:a {:on-click #(dispatch [:choose-opponents])} "Experiment!"]]]])))
+         [:a {:on-click #(dispatch [:signup/navigate])} "Create one now!"]]]])))

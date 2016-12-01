@@ -4,7 +4,7 @@
 (defn create-answer [question-id answer]
   ^{:key (:id answer)}
   [:a {:class "btn btn-lg btn-default btn-block", :href "#", :role "button"
-       :on-click #(re-frame/dispatch [:submit-answer question-id (:id answer)])} (:answer answer)])
+       :on-click #(re-frame/dispatch [:game/submit-answer question-id (:id answer)])} (:answer answer)])
 
 (defn ask-question []
   (let [question (re-frame/subscribe [:current-question])
