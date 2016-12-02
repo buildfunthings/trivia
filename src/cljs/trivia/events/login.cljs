@@ -24,5 +24,6 @@
  (fn [cofx]
    {:dispatch-n (list
                  [:game/get-friend-list]
+                 [:game/get-open-games]
                  [:active-page :create-game]
                  )}))

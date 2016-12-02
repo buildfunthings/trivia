@@ -4,6 +4,46 @@
             [re-frame.core :as re-frame]
             [trivia.locations :as locations]))
 
+;; User ID - required
+;; If the current user is in the list of open users
+;; - Reset internal state to gameplay of current user
+;; - remove answered questions
+;; - call next-question
+;;
+;; If the current user is not in the list of open users
+;; - set game-id in server-state
+;; - dispatch game-end
+;;
+;; Leaderboard should refresh every 5 seconds
+(re-frame/reg-event-fx
+ :game/resume
+ (fn [{:keys [db]} [_ game-id player-state]]
+   (let [gid (name game-id)]
+     {:db  (assoc-in db [:server-state :id] gid)
+       :dispatch-n (if (< (:answered player-state) 5)
+                     (list [:game/get-game-questions {:game-id gid :followup :game/resume-at :at (:answered player-state)}])
+                     (list [:game/end]))
+      })))
+
+(re-frame/reg-event-fx
+ :game/resume-at
+ (fn [cofx event]
+   (prn event)
+   {}))
+
+(re-frame/reg-event-fx
+ :game/get-game-questions
+ (fn [{:keys [db]} [_ {:keys [game-id followup at]}]]
+   {:db (assoc db :server-state game-id)
+     :http-xhrio {:method :get
+                  :uri (str locations/api "/games/" game-id "/questions")
+                  :timeout 2000
+                  :with-credentials true
+                  :response-format (ajax/json-response-format {:keywords? true})
+                  :on-success [followup at]
+                  :on-failure [:request-failure]}
+    }))
+
 (re-frame/reg-event-fx
  :game/next-question
  (fn [{:keys [db]}]

@@ -88,9 +88,9 @@
                  :tags ["games"]
                  :auth-rules authenticated?
                  :current-user user
-                 :return [schema/Game]
-                 (log/info "Retrieving list of games for user" user)
-                 (ok []))
+                 :return schema/OpenGames
+                 (let [games (api/get-open-games db (:username user))]
+                   (ok games)))
 
             (GET "/games/:id/questions" []
                  :tags ["games"]

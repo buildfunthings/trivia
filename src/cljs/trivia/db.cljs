@@ -4,6 +4,7 @@
 (def default-value
   {:name "Arjen"
    :friends []
+   :open-games []
    :state {:round 1
            :max-rounds 5
            :correct 0

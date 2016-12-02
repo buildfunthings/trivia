@@ -20,5 +20,5 @@
                  :format (ajax/json-request-format)
                  :with-credentials true
                  :response-format (ajax/json-response-format {:keywords? true})
-                 :on-success [:login-success]
+                 :on-success [:login/success]
                  :on-failure [:request-failure]}}))

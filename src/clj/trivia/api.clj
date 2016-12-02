@@ -54,6 +54,12 @@ be added to the same game."
   [db game-id {:keys [username]}]
   (db-protocol/get-game-questions db game-id username))
 
+(defn get-open-games
+  "Retrieve the list of open games for the `username`. Returns a map of maps keyed
+by the `game_id`."
+  [db username]
+  (group-by :game_id  (db-protocol/get-open-games db username)))
+
 (defn get-leaderboard
   "Retrieve a leaderboard for a game"
   [db game-id]

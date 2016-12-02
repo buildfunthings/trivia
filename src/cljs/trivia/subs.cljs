@@ -17,6 +17,11 @@
    (:friends db)))
 
 (re-frame/reg-sub
+ :open-games
+ (fn [db _]
+   (:open-games db)))
+
+(re-frame/reg-sub
  :server-state
  (fn [db _]
    (:server-state db)))

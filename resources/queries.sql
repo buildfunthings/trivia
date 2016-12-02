@@ -95,3 +95,12 @@ select u.id, u.username, gu.answered, gu.correct
  inner join users u on u.id = gu.user_id
  where game_id = :game_id
  order by gu.correct DESC
+
+-- :name db-get-open-games :? :*
+-- :doc Retrieve the list of open games for a user
+select game_id, user_id, answered, correct
+  from game_users gu
+ where gu.game_id in (select game_id 
+                        from game_users gu1 
+                       inner join users u on u.id = gu1.user_id AND u.username = :username)
+   and gu.answered != 5
