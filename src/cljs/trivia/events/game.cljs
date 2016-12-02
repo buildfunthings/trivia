@@ -20,27 +20,30 @@
  (fn [{:keys [db]} [_ game-id player-state]]
    (let [gid (name game-id)]
      {:db  (assoc-in db [:server-state :id] gid)
-       :dispatch-n (if (< (:answered player-state) 5)
-                     (list [:game/get-game-questions {:game-id gid :followup :game/resume-at :at (:answered player-state)}])
+      :dispatch-n (if (< (:answered player-state) 5)
+                    ;; 
+                    (list [:game/get-game-questions {:game-id gid :followup [:game/resume-at (first player-state)]}])
                      (list [:game/end]))
       })))
 
 (re-frame/reg-event-fx
  :game/resume-at
- (fn [cofx event]
-   (prn event)
-   {}))
+ (fn [cofx [_ player-state questions]]
+   ;; TODO we left it here...
+   
+   {:db (:db cofx)}))
 
 (re-frame/reg-event-fx
  :game/get-game-questions
- (fn [{:keys [db]} [_ {:keys [game-id followup at]}]]
+ (fn [{:keys [db]} [_ {:keys [game-id followup]}]]
+   (prn "Follow up: " followup)
    {:db (assoc db :server-state game-id)
      :http-xhrio {:method :get
                   :uri (str locations/api "/games/" game-id "/questions")
                   :timeout 2000
                   :with-credentials true
                   :response-format (ajax/json-response-format {:keywords? true})
-                  :on-success [followup at]
+                  :on-success followup
                   :on-failure [:request-failure]}
     }))
 
