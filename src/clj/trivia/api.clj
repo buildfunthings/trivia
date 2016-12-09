@@ -4,7 +4,7 @@
             [trivia.db-protocol :as db-protocol]))
 
 ;;; Authentication
-(defn- get-user-from-db [db username]
+(defn get-user-from-db [db username]
   (db-protocol/get-user db username))
 
 (defn authenticate-user

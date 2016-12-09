@@ -57,19 +57,19 @@
     }))
 
 (re-frame/reg-event-fx
- :game/open-games-success
+ :game/prev-games-success
  (fn [{:keys [db]} [_ games]]
-   {:db (assoc db :open-games games)}))
+   {:db (assoc db :prev-games games)}))
 
 (re-frame/reg-event-fx
- :game/get-open-games
+ :game/get-prev-games
  (fn [{:keys [db]}]
    {:http-xhrio {:method :get
                  :uri (str locations/api "/games")
                  :timeout 2000
                  :with-credentials true
                  :response-format (ajax/json-response-format {:keywords? true})
-                 :on-success [:game/open-games-success]
+                 :on-success [:game/prev-games-success]
                  :on-failure [:request-failure]}
     }))
 

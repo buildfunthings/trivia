@@ -35,5 +35,5 @@
          [:div.row
           [:p
            [:a {:class "btn btn-primary btn-lg", :href "#", :role "button"
-                :on-click #(dispatch [:game/create])}
+                :on-click #(dispatch [:login/success])}
             "Create a new game »"]]]]]])))

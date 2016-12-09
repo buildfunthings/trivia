@@ -18,26 +18,31 @@
 (re-frame/reg-event-fx
  :game/resume
  (fn [{:keys [db]} [_ game-id player-state]]
-   (let [gid (name game-id)]
+   (let [gid (name game-id)
+         state (first player-state)]
      {:db  (assoc-in db [:server-state :id] gid)
-      :dispatch-n (if (< (:answered player-state) 5)
-                    ;; 
+      :dispatch-n (if (< (:answered state) 5)
                     (list [:game/get-game-questions {:game-id gid :followup [:game/resume-at (first player-state)]}])
-                     (list [:game/end]))
+                    (list [:game/end]))
       })))
 
 (re-frame/reg-event-fx
  :game/resume-at
- (fn [cofx [_ player-state questions]]
-   ;; TODO we left it here...
-   
-   {:db (:db cofx)}))
+ (fn [{:keys [db]} [_ player-state questions]]
+   (let [answered (:answered player-state)
+         correct (:correct player-state)]
+     (prn player-state)
+     {:db (-> db
+              (assoc-in [:state :round] answered)
+              (assoc-in [:state :correct] correct )
+              (assoc :questions (nthrest questions answered)))
+      :dispatch-n (list [:active-page :ask-question]
+                        [:game/next-question])})))
 
 (re-frame/reg-event-fx
  :game/get-game-questions
  (fn [{:keys [db]} [_ {:keys [game-id followup]}]]
-   (prn "Follow up: " followup)
-   {:db (assoc db :server-state game-id)
+   {:db (assoc-in db [:server-state :id] game-id)
      :http-xhrio {:method :get
                   :uri (str locations/api "/games/" game-id "/questions")
                   :timeout 2000

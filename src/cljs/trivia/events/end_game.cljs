@@ -21,5 +21,7 @@
                  :response-format (ajax/json-response-format {:keywords? true})
                  :on-success [:game/get-leaderboard-success]
                  :on-failure [:request-failure]}
+;;     :dispatch-later [{:ms 5000
+;;                       :dispatch [:game/end] } ]
     }))
 

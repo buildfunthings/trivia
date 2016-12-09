@@ -27,7 +27,7 @@ SELECT correct
 
 -- :name get-user-by-name :? :1
 -- :doc Get the user by its username
-SELECT username, hash
+SELECT id, username, hash
   FROM users
  WHERE username = :username
 
@@ -103,4 +103,5 @@ select game_id, user_id, answered, correct
  where gu.game_id in (select game_id 
                         from game_users gu1 
                        inner join users u on u.id = gu1.user_id AND u.username = :username)
-   and gu.answered != 5
+ order by game_id desc
+--   and gu.answered != 5
