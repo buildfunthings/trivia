@@ -1,4 +1,4 @@
-(defproject trivia "0.0.12"
+(defproject trivia "0.0.14"
   :description "Trivia Game"
   :url "https://www.buildfunthings.com"
 
@@ -29,8 +29,7 @@
                  [ring/ring-mock "0.3.0"]
                  [buddy/buddy-core "1.1.1"]
                  [buddy/buddy-auth "1.2.0"]
-                 [buddy/buddy-hashers "1.0.0"]
-                 [reagent-forms "0.5.28"]]
+                 [buddy/buddy-hashers "1.0.0"]]
 
   :plugins [[lein-cljsbuild "1.1.4"]
             [lein-environ "1.1.0"]]

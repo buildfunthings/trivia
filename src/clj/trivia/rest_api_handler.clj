@@ -60,6 +60,15 @@
                   (if (api/authenticate-user db username password)
                     (assoc-in (ok {}) [:session :identity] {:username username})
                     (assoc-in (forbidden) [:session :identity] nil)))
+
+            (GET "/login" []
+                 :tags ["users"]
+                 :auth-rules authenticated?
+                 :current-user user
+                 :return schema/User
+                 (let [data (api/get-user-from-db db (:username user))
+                       result (select-keys data [:id :username])]
+                   (ok result)))
             
             (POST "/signup" []
                   :tags ["users"]
@@ -88,9 +97,9 @@
                  :tags ["games"]
                  :auth-rules authenticated?
                  :current-user user
-                 :return [schema/Game]
-                 (log/info "Retrieving list of games for user" user)
-                 (ok []))
+                 :return schema/OpenGames
+                 (let [games (api/get-open-games db (:username user))]
+                   (ok games)))
 
             (GET "/games/:id/questions" []
                  :tags ["games"]

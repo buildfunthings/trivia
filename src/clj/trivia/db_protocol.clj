@@ -14,6 +14,7 @@
   (get-game [this game-id username])
   (get-game-questions [this game-id username])
   (correct-answer? [this game-id questionid answerid username])
+  (get-open-games [this username])
   (leaderboard [this game-id]))
 
 (defprotocol DbActions

@@ -41,6 +41,9 @@
         (doall (map #(db-add-user-to-game-by-id spec {:game_id game-id :user_id %}) players)))
       game-id))
 
+(defn- get-open-games [db username]
+  (db-get-open-games db {:username username}))
+
 (defrecord PostgreSQL-DB [pool]
   db-protocol/DbActions
   (get-random-question [this]
@@ -62,6 +65,9 @@
   (correct-answer? [this game-id question-id answer-id username]
     (verify-answer (:spec pool) game-id question-id answer-id username))
 
+  (get-open-games [this username]
+    (get-open-games (:spec pool) username))
+  
   (leaderboard [this game-id]
     (get-leaderboard (:spec pool) game-id))
   

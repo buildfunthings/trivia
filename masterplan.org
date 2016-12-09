@@ -1,41 +1,54 @@
 * The masterplan
 
-** Part I - the basics
+** Trivia
 
-*** Build System
-*** Technology
+*** DONE Build System
+*** DONE Technology
 **** Components
 **** Database migrations
 **** REST API
 
 
-*** Players / User registration
+*** DONE Players / User registration
+*** DONE Game registration
+*** TODO select unfinished game
+*** DONE Questions
+*** DONE Multiplayer Games
+*** TODO Leaderboard 
 
-*** Game registration
+** Quantum Tic Tac Toe
 
-*** Questions
+Taking multiplayer tic tac toe to the next level.
 
-*** VS Games
+Builds on the skills of Project Trivia.
+
+*** Part I - basic gameplay
+
+**** TODO User management
+**** TODO Realtime gameplay - WebSockets
+**** TODO Using browser history
+**** TODO Implement single player mode
+**** TODO CSS3 Animations for the board
+**** TODO Implement multi player mode
+**** TODO time trial
+
+*** Part II - being more advanced
+
+**** TODO Observing games as outsider
+
+**** TODO Increasing scalability
+
+ - Decouple user management from gameplay
+ - Using tokens for authentication
 
 
-** Part II - being more advanced
+**** TODO run on Docker Swarm / Kubernetes
 
-*** WebSockets
+*** Part III - monitoring your service
 
-**** Realtime gameplay
-**** Observing games
+**** Graphite & Grafana
 
-*** Increasing scalability
-
-- Decouple use management from gameplay
-- Using tokens for authentication
-
-
-** Part III - monitoring your service
-
-*** Graphite & Grafana
-
-Introduction to metrics, posting them to an agent and reporting on
-them.
+ Introduction to metrics, posting them to an agent and reporting on
+ them.
 
 
