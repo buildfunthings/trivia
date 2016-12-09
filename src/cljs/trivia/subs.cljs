@@ -12,9 +12,19 @@
    (:leaderboard db)))
 
 (re-frame/reg-sub
+ :user
+ (fn [db _]
+   (:user db)))
+
+(re-frame/reg-sub
  :friends
  (fn [db _]
    (:friends db)))
+
+(re-frame/reg-sub
+ :prev-games
+ (fn [db _]
+   (:prev-games db)))
 
 (re-frame/reg-sub
  :server-state

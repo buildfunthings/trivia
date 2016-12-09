@@ -19,10 +19,29 @@
                  :on-failure [:request-failure]}
     }))
 
+(re-frame/reg-event-db
+ :login/get-user-success
+ (fn [db [_ result]]
+   (assoc db :user result)))
+
+(re-frame/reg-event-fx
+ :login/get-user
+ (fn [{:keys [db]} event]
+   {:http-xhrio {:method :get
+                 :uri (str locations/api "/login")
+                  :timeout 2000
+                  :with-credentials true
+                  :response-format (ajax/json-response-format {:keywords? true})
+                  :on-success [:login/get-user-success]
+                  :on-failure [:request-failure]}}
+   ))
+
 (re-frame/reg-event-fx
  :login/success
  (fn [cofx]
    {:dispatch-n (list
+                 [:login/get-user]
                  [:game/get-friend-list]
+                 [:game/get-prev-games]
                  [:active-page :create-game]
                  )}))

@@ -21,6 +21,18 @@
                    :date_completed s/Str
                    })
 
+(s/defschema PlayerStatus {:game_id s/Int
+                           :user_id s/Int
+                           :answered s/Int
+                           :correct s/Int})
+
+(s/defschema OpenGames {s/Int
+                        [PlayerStatus]
+                        })
+
+;; (s/validate OpenGames 
+;;             {1 [{:game_id 1 :user_id 1 :answered 3 :correct 1}]})
+
 (s/defschema Answer {:id s/Int :answer s/Str})
 
 (s/defschema Question {:id s/Int
